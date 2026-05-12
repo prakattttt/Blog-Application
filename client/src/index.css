@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.popup {
+  @apply transition-all duration-150 ease-linear hover:scale-105;
+}

@@ -31,12 +31,19 @@ const Menus = () => {
           <NavLink
             to={m.dest}
             className={({ isActive }) =>
-              `flex items-center gap-3 p-4 hover:cursor-pointer ${
-                isActive ? "bg-gray-300" : ""
-              }`
+              `
+              flex items-center gap-3 px-5 py-3
+              transition-all duration-500 ease-out
+              hover:scale-105 hover:shadow-md
+              ${
+                isActive
+                  ? "bg-black text-white"
+                  : "bg-white text-black"
+              }
+              `
             }
           >
-            <m.icon />
+            <m.icon className="transition-transform duration-300 group-hover:rotate-6" />
             {m.menu}
           </NavLink>
         </li>
