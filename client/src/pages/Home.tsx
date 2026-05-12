@@ -1,6 +1,10 @@
+
+import MainSection from "../components/MainSection"
+import content from "../utils/SectionInfo"
+
 const Home = () => {
   return (
-    <div>HomePage</div>
+    <MainSection {...content.home}/>
   )
 }
 

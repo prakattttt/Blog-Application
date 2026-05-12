@@ -1,6 +1,9 @@
+import MainSection from "../components/MainSection"
+import content from "../utils/SectionInfo"
+
 const Trending = () => {
   return (
-    <div>Trending</div>
+    <MainSection {...content.trending}/>
   )
 }
 

@@ -1,6 +1,9 @@
+import MainSection from "../components/MainSection"
+import content from "../utils/SectionInfo"
+
 const Bookmarks = () => {
   return (
-    <div>Bookmarks</div>
+    <MainSection {...content.bookmarks}/>
   )
 }
 
