@@ -8,4 +8,5 @@ export interface CardType {
     likes: number,
     comments: number,
     isBookmarked: boolean
+    profileImg: string
 }
