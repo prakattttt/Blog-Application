@@ -1,5 +1,6 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, type Model } from "mongoose";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 interface IUser {
   name: string;
@@ -10,36 +11,36 @@ interface IUser {
   updatedAt?: Date;
 }
 
-const UserSchema = new Schema<IUser>(
+interface IUserModel extends Model<IUser> {
+  getUsers(limit: number, skip: number): Promise<IUser[]>;
+}
+
+const UserSchema = new Schema<IUser, IUserModel>(
   {
     name: {
-  type: String,
-  required: [true, "Name is required!"],
-  trim: true,
-  validate: {
-    validator: (value: string) =>
-      validator.isAlphanumeric(value),
-    message: "Please provide a valid username!",
-  },
-},
+      type: String,
+      required: true,
+      trim: true,
+      validate: {
+        validator: (value: string) => validator.isAlphanumeric(value),
+      },
+    },
 
-email: {
-  type: String,
-  required: [true, "Email is required!"],
-  unique: true,
-  lowercase: true,
-  trim: true,
-  validate: {
-    validator: (value: string) =>
-      validator.isEmail(value),
-    message: "Please provide a valid email address!",
-  },
-},
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      validate: {
+        validator: (value: string) => validator.isEmail(value),
+      },
+    },
 
     password: {
       type: String,
-      required: [true, "Password is required!"],
-      select: false, 
+      required: true,
+      select: false,
       validate: {
         validator: (value: string) =>
           validator.isStrongPassword(value, {
@@ -48,8 +49,6 @@ email: {
             minUppercase: 1,
             minNumbers: 1,
           }),
-        message:
-          "Password must contain uppercase, lowercase, number, and min 8 characters",
       },
     },
 
@@ -59,8 +58,22 @@ email: {
     },
   },
   {
-    timestamps: true, 
-  }
+    timestamps: true,
+  },
 );
 
-export const User = model<IUser>("User", UserSchema);
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return;
+
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+UserSchema.statics["getUsers"] = async function (
+  this: Model<IUser>,
+  limit: number,
+  skip: number,
+) {
+  return this.find().limit(limit).skip(skip).select("-password");
+};
+
+export const User = model<IUser, IUserModel>("User", UserSchema);
