@@ -2,7 +2,10 @@ import { model, Schema, type Model } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 
+import type { Types } from "mongoose";
+
 interface IUser {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -13,6 +16,11 @@ interface IUser {
 
 interface IUserModel extends Model<IUser> {
   getUsers(skip: number): Promise<IUser[]>;
+  registerUser(
+    name: string,
+    email: string,
+    pasword: string,
+  ): Promise<{ success: boolean; id: string }>;
 }
 
 const UserSchema = new Schema<IUser, IUserModel>(
@@ -62,7 +70,29 @@ const UserSchema = new Schema<IUser, IUserModel>(
 
     statics: {
       async getUsers(skip: number = 0) {
-        return this.find().limit(12).skip(skip * 12).select("-password");
+        return this.find()
+          .limit(12)
+          .skip(skip * 12)
+          .select("-password");
+      },
+
+      async registerUser(name: string, email: string, password: string) {
+        const existingUser = await this.findOne({ email });
+
+        if (existingUser) {
+          throw new Error("Email already exists!");
+        }
+
+        const registeredUser = await this.create({
+          name,
+          email,
+          password,
+        });
+
+        return {
+          success: true,
+          id: registeredUser._id,
+        };
       },
     },
   },
