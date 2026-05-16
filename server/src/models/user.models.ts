@@ -30,7 +30,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
       required: true,
       trim: true,
       validate: {
-        validator: (value: string) => validator.isAlphanumeric(value),
+        validator: (value: string) => /^[a-zA-Z\s]+$/.test(value),
       },
     },
 
@@ -56,6 +56,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
             minLowercase: 1,
             minUppercase: 1,
             minNumbers: 1,
+            minSymbols: 0,
           }),
       },
     },
