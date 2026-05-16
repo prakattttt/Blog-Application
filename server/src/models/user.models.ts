@@ -12,7 +12,7 @@ interface IUser {
 }
 
 interface IUserModel extends Model<IUser> {
-  getUsers(limit: number, skip: number): Promise<IUser[]>;
+  getUsers(skip: number): Promise<IUser[]>;
 }
 
 const UserSchema = new Schema<IUser, IUserModel>(
@@ -59,6 +59,12 @@ const UserSchema = new Schema<IUser, IUserModel>(
   },
   {
     timestamps: true,
+
+    statics: {
+      async getUsers(skip: number = 0) {
+        return this.find().limit(12).skip(skip * 12).select("-password");
+      },
+    },
   },
 );
 
@@ -67,13 +73,5 @@ UserSchema.pre("save", async function () {
 
   this.password = await bcrypt.hash(this.password, 10);
 });
-
-UserSchema.statics["getUsers"] = async function (
-  this: Model<IUser>,
-  limit: number,
-  skip: number,
-) {
-  return this.find().limit(limit).skip(skip).select("-password");
-};
 
 export const User = model<IUser, IUserModel>("User", UserSchema);
