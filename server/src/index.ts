@@ -5,6 +5,8 @@ import cors from "cors";
 import { PORT } from "./config/env.js";
 import connectToDb from "./config/db.js";
 
+import router from "./routes/user.routes.js";
+
 const app = express();
 
 app.use(express.json());
@@ -16,6 +18,8 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use("/", router)
 
 const startServer = async () => {
   try {
