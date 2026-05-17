@@ -25,3 +25,11 @@ export const errorHandler = (
 
   res.status(error.statusCode).json(responseBody);
 };
+
+export const notFoundHandler = (
+  _req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  next(new AppError("URL not found", 404));
+};

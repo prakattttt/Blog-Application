@@ -4,8 +4,10 @@ import express from "express";
 import cors from "cors";
 import { PORT } from "./config/env.js";
 import connectToDb from "./config/db.js";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 
 import router from "./routes/user.routes.js";
+import { error } from "node:console";
 
 const app = express();
 
@@ -20,6 +22,10 @@ app.use(
 );
 
 app.use("/", router)
+
+app.use(notFoundHandler);
+
+app.use(errorHandler);
 
 const startServer = async () => {
   try {
