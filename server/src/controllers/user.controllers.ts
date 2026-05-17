@@ -80,7 +80,7 @@ export const loginUser: RequestHandler = expressAsyncHandler(
 );
 
 export const logoutUser: RequestHandler = expressAsyncHandler(
-  async (req, res) => {
+  async (_req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       secure: env !== "development",
