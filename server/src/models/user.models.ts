@@ -93,7 +93,6 @@ const UserSchema = new Schema<IUser, IUserModel>(
 
         return {
           success: true,
-          id: registeredUser._id,
         };
       },
     },

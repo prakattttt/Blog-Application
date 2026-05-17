@@ -1,12 +1,18 @@
 import expressAsyncHandler from "express-async-handler";
 import type { RequestHandler } from "express";
 import { User } from "../models/user.models.js";
+import AppError from "../utils/AppError.js";
 import { generateAccessTokens } from "../utils/tokenGenerator.js";
 
 export interface registerInterface {
-  name: string,
-  email: string,
-  password: string
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface loginInterface {
+  email: string;
+  password: string;
 }
 
 export const getAllUsers: RequestHandler = expressAsyncHandler(
@@ -22,16 +28,19 @@ export const getAllUsers: RequestHandler = expressAsyncHandler(
   },
 );
 
-
 export const registerUser: RequestHandler = expressAsyncHandler(
-  async(req, res) => {
-    const { name, email, password }: registerInterface = (req.body || {}) as registerInterface;
+  async (req, res) => {
+    const { name, email, password } = req.body as registerInterface;
 
-    const registerUser: { success: boolean, id: string } = await User.registerUser(name, email, password);
+    const result = await User.registerUser(name, email, password);
 
-    if(registerUser.success) {
-      const token: string = generateAccessTokens({ id: registerUser.id })
-      res.status(200).json({ token, success: true })
+    if (!result.success) {
+      throw new AppError("Failed to register user", 400);
     }
-  }
-)
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully!",
+    });
+  },
+);
