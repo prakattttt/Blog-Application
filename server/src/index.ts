@@ -7,7 +7,6 @@ import connectToDb from "./config/db.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 
 import router from "./routes/user.routes.js";
-import { error } from "node:console";
 
 const app = express();
 

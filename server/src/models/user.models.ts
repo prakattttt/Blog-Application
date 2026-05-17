@@ -1,4 +1,5 @@
 import { model, Schema, type Model } from "mongoose";
+import AppError from "../utils/AppError.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 
@@ -81,7 +82,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
         const existingUser = await this.findOne({ email });
 
         if (existingUser) {
-          throw new Error("Email already exists!");
+          throw new AppError("Email already exists!", 409);
         }
 
         const registeredUser = await this.create({
