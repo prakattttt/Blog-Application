@@ -78,3 +78,18 @@ export const loginUser: RequestHandler = expressAsyncHandler(
     });
   },
 );
+
+export const logoutUser: RequestHandler = expressAsyncHandler(
+  async (req, res) => {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: env !== "development",
+      sameSite: "lax",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User logged out successfully!",
+    });
+  },
+);
