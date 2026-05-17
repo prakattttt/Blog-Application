@@ -17,10 +17,16 @@ interface IUser {
 
 interface IUserModel extends Model<IUser> {
   getUsers(skip: number): Promise<IUser[]>;
+
   registerUser(
     name: string,
     email: string,
     pasword: string,
+  ): Promise<{ success: boolean }>;
+
+  loginUser(
+    email: string,
+    password: string,
   ): Promise<{ success: boolean; id: string }>;
 }
 
@@ -85,7 +91,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
           throw new AppError("Email already exists!", 409);
         }
 
-        const registeredUser = await this.create({
+        await this.create({
           name,
           email,
           password,
@@ -93,6 +99,25 @@ const UserSchema = new Schema<IUser, IUserModel>(
 
         return {
           success: true,
+        };
+      },
+
+      async loginUser(email: string, password: string) {
+        const user = await this.findOne({ email }).select("+password");
+
+        if (!user) {
+          throw new AppError(`Cannot find the user with email ${email}`);
+        }
+
+        const isMatched = await bcrypt.compare(password, user.password);
+
+        if (!isMatched) {
+          throw new AppError(`Invalid password. Please try again!`);
+        }
+
+        return {
+          success: true,
+          id: user._id,
         };
       },
     },
