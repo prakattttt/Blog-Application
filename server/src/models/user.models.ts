@@ -106,13 +106,13 @@ const UserSchema = new Schema<IUser, IUserModel>(
         const user = await this.findOne({ email }).select("+password");
 
         if (!user) {
-          throw new AppError(`Cannot find the user with email ${email}`);
+          throw new AppError(`Cannot find the user with email ${email}`, 400);
         }
 
         const isMatched = await bcrypt.compare(password, user.password);
 
         if (!isMatched) {
-          throw new AppError(`Invalid password. Please try again!`);
+          throw new AppError(`Invalid password. Please try again!`, 401);
         }
 
         return {
