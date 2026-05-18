@@ -5,7 +5,11 @@ import Button from "./Button";
 import Profile from "./Profile";
 import Menus from "./Menus";
 
-const Navbar = () => {
+type CreateProps = {
+  handleClick: () => void;
+};
+
+const Navbar = ({ handleClick }: CreateProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,7 +36,7 @@ const Navbar = () => {
 
         <ul className="flex items-center gap-4 md:gap-5 mt-2 md:mt-0">
           <li>
-            <Button />
+            <Button handleClick={handleClick}/>
           </li>
 
           <li>
