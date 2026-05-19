@@ -9,36 +9,45 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="flex flex-col md:flex-row justify-between items-center px-6 md:px-10 lg:px-15 py-3 shadow-md relative">
-      <div className="flex items-center justify-between w-full md:w-auto">
-        <span className="text-2xl lg:text-3xl font-extrabold">NodeBlog</span>
+    <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-4">
+        <div className="flex items-center justify-between">
+          <span className="text-2xl md:text-3xl font-black tracking-tight cursor-pointer">
+            NodeBlog
+          </span>
 
-        <button onClick={() => setOpen(!open)} className="md:hidden text-2xl">
-          {open ? <FiX /> : <FiMenu />}
-        </button>
-      </div>
+          <div className="hidden md:flex items-center gap-8">
+            <Menus />
 
-      <div
-        className={`
-          w-full md:w-auto
-          flex-col md:flex-row
-          items-center
-          md:gap-8
-          md:flex
-          ${open ? "flex" : "hidden md:flex"}
-        `}
-      >
-        <Menus />
+            <ul className="flex items-center gap-4">
+              <li>
+                <Button />
+              </li>
 
-        <ul className="flex items-center gap-4 md:gap-5 mt-2 md:mt-0">
-          <li>
-            <Button />
-          </li>
+              <li>
+                <Profile />
+              </li>
+            </ul>
+          </div>
 
-          <li>
-            <Profile />
-          </li>
-        </ul>
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            className="md:hidden text-3xl text-black"
+          >
+            {open ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+
+        {open && (
+          <div className="md:hidden mt-6 flex flex-col items-center gap-6 pb-4 animate-[fadeIn_0.2s_ease]">
+            <Menus />
+
+            <div className="flex items-center gap-4">
+              <Button />
+              <Profile />
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

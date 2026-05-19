@@ -24,35 +24,28 @@ const menus: Menu[] = [
 
 const Menus = () => {
   return (
-    <ul className="flex flex-col items-center gap-2 text-lg ml-10">
+    <ul className="flex flex-col md:flex-row items-center gap-1 md:gap-6">
       {menus.map((m) => (
-        <li key={m.dest} className="relative group text-base lg:text-lg">
+        <li key={m.dest} className="relative group">
           <NavLink
             to={m.dest}
             className={({ isActive }) =>
               `
-              flex items-center gap-3 py-2
-              transition-all duration-500 ease-out
+              flex items-center gap-2 px-4 py-2 rounded-xl
+              transition-all duration-300
+              text-sm md:text-base font-medium
               ${
                 isActive
-                  ? "text-black font-semibold"
-                  : "text-gray-500 hover:text-black"
+                  ? "bg-black text-white shadow-md"
+                  : "text-gray-600 hover:text-black hover:bg-gray-100"
               }
               `
             }
           >
-            <m.icon className="transition-transform duration-500 group-hover:rotate-6" />
-            {m.menu}
-          </NavLink>
+            <m.icon className="text-sm transition-transform duration-300 group-hover:scale-110" />
 
-          <span
-            className="
-              absolute left-0 -bottom-1 h-0.5 w-0
-              bg-black
-              transition-all duration-500
-              group-hover:w-full
-            "
-          />
+            <span>{m.menu}</span>
+          </NavLink>
         </li>
       ))}
     </ul>
