@@ -24,9 +24,9 @@ const menus: Menu[] = [
 
 const Menus = () => {
   return (
-    <ul className="flex items-center gap-8 text-lg ml-10">
+    <ul className="flex flex-col items-center gap-2 text-lg ml-10">
       {menus.map((m) => (
-        <li key={m.dest} className="relative group">
+        <li key={m.dest} className="relative group text-base lg:text-lg">
           <NavLink
             to={m.dest}
             className={({ isActive }) =>

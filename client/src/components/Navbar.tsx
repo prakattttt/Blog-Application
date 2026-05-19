@@ -5,17 +5,13 @@ import Button from "./Button";
 import Profile from "./Profile";
 import Menus from "./Menus";
 
-type CreateProps = {
-  handleClick: () => void;
-};
-
-const Navbar = ({ handleClick }: CreateProps) => {
+const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <nav className="flex flex-col md:flex-row justify-between items-center px-6 md:px-10 lg:px-15 py-3 shadow-md relative">
       <div className="flex items-center justify-between w-full md:w-auto">
-        <span className="text-2xl md:text-3xl font-extrabold">NodeBlog</span>
+        <span className="text-2xl lg:text-3xl font-extrabold">NodeBlog</span>
 
         <button onClick={() => setOpen(!open)} className="md:hidden text-2xl">
           {open ? <FiX /> : <FiMenu />}
@@ -36,7 +32,7 @@ const Navbar = ({ handleClick }: CreateProps) => {
 
         <ul className="flex items-center gap-4 md:gap-5 mt-2 md:mt-0">
           <li>
-            <Button handleClick={handleClick}/>
+            <Button />
           </li>
 
           <li>

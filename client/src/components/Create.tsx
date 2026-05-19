@@ -1,10 +1,8 @@
 import CreateForm from "./CreateForm";
+import useWrite from "../hooks/useWrite";
 
-type CreateProps = {
-  handleClick: () => void;
-};
-
-const Create = ({ handleClick }: CreateProps) => {
+const Create = () => {
+  const { toggle } = useWrite();
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-10">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease]">
@@ -21,7 +19,7 @@ const Create = ({ handleClick }: CreateProps) => {
 
           <hr className="border-gray-200 mb-5" />
 
-          <CreateForm handleClick={handleClick}/>
+          <CreateForm handleClick={toggle} />
         </div>
       </div>
     </div>
