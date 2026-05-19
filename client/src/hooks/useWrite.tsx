@@ -5,7 +5,7 @@ const useWrite = () => {
   const write = useContext(WriteContext);
 
   if(!write) {
-    throw new Error("useWrite must be used inside WriteProvider");
+    throw new Error("useWrite must be used inside WriteProvider!");
   }
 
   return write;

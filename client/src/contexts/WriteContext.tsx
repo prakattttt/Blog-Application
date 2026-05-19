@@ -1,9 +1,5 @@
 import { createContext, useState } from "react";
-
-interface writeInterface {
-    isOpen: boolean,
-    toggle: () => void
-}
+import type { writeInterface } from "../types/context.types"
 
 export const WriteContext = createContext<writeInterface | null>(null);
 
