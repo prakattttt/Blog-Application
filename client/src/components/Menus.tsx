@@ -1,4 +1,4 @@
-import { FaHome, FaBookmark } from "react-icons/fa";
+import { FaHome, FaBookmark, FaFileAlt } from "react-icons/fa";
 import { AiOutlineRise } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 
@@ -14,6 +14,11 @@ const menus: Menu[] = [
     menu: "Trending",
     icon: AiOutlineRise,
     dest: "/trending",
+  },
+  {
+    menu: "My Posts",
+    icon: FaFileAlt,
+    dest: "/mypost",
   },
   {
     menu: "Bookmarks",
