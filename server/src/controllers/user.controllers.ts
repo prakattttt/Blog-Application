@@ -3,6 +3,7 @@ import type { RequestHandler } from "express";
 import { User } from "../models/user.models.js";
 import AppError from "../utils/AppError.js";
 import { generateAccessTokens } from "../utils/tokenGenerator.js";
+import type { AuthRequest } from "../middlewares/authenticaton.js";
 import { env } from "../config/env.js";
 
 export interface registerInterface {
@@ -25,6 +26,25 @@ export const getAllUsers: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       users,
+    });
+  },
+);
+
+export const getMe: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized!", 401);
+    }
+
+    const user = await User.findUser(req.user.id);
+
+    if (!user) {
+      throw new AppError("User not found!", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
     });
   },
 );

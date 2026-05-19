@@ -18,6 +18,8 @@ interface IUser {
 interface IUserModel extends Model<IUser> {
   getUsers(skip: number): Promise<IUser[]>;
 
+  findUser(id: string): Promise<IUser[]>;
+
   registerUser(
     name: string,
     email: string,
@@ -82,6 +84,10 @@ const UserSchema = new Schema<IUser, IUserModel>(
           .limit(12)
           .skip(skip * 12)
           .select("-password");
+      },
+
+      async findUser(id: number) {
+        return this.findById(id).select("-password");
       },
 
       async registerUser(name: string, email: string, password: string) {
