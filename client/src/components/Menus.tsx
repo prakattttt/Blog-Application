@@ -18,7 +18,7 @@ const menus: Menu[] = [
   {
     menu: "My Posts",
     icon: FaFileAlt,
-    dest: "/mypost",
+    dest: "/myposts",
   },
   {
     menu: "Bookmarks",

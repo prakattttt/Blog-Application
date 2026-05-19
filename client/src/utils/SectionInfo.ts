@@ -14,6 +14,10 @@ export const content: Record<string, Content> = {
     header: "Bookmarked Posts",
     description: "See what you have bookmarked",
   },
+    myPosts: {
+    header: "My Blog Posts",
+    description: "See what you have posted",
+  },
 };
 
 export default content;
