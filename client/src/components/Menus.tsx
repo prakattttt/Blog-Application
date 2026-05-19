@@ -24,7 +24,7 @@ const menus: Menu[] = [
 
 const Menus = () => {
   return (
-    <ul className="flex flex-col md:flex-row items-center gap-1 md:gap-6">
+    <ul className="flex flex-col md:flex-row items-center gap-1 md:gap-2 xl:gap-4">
       {menus.map((m) => (
         <li key={m.dest} className="relative group">
           <NavLink
