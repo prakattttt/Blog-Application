@@ -16,7 +16,7 @@ const Navbar = () => {
             NodeBlog
           </span>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden xl:flex items-center gap-8">
             <Menus />
 
             <ul className="flex items-center gap-2 lg:gap-4">
@@ -32,14 +32,14 @@ const Navbar = () => {
 
           <button
             onClick={() => setOpen((prev) => !prev)}
-            className="md:hidden text-3xl text-black"
+            className="xl:hidden text-3xl text-black"
           >
             {open ? <FiX /> : <FiMenu />}
           </button>
         </div>
 
         {open && (
-          <div className="md:hidden mt-6 flex flex-col items-center gap-4 pb-4 animate-[fadeIn_0.2s_ease]">
+          <div className="xl:hidden mt-6 flex flex-col items-center gap-4 pb-4 animate-[fadeIn_0.2s_ease]">
             <Menus />
 
             <div className="flex items-center gap-2">
