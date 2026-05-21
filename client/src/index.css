@@ -3,3 +3,7 @@
 .popup {
   @apply transition-all duration-150 ease-linear hover:scale-105;
 }
+
+.hover-info {
+  @apply absolute -bottom-9 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all delay-100 duration-500 text-sm bg-black text-white px-2 py-1 rounded-md shadow-md;
+}
