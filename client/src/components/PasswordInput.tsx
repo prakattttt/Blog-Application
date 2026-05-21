@@ -4,7 +4,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 const PasswordInput = ({
   placeholder = "Enter your password",
   label = "Password",
-  required = true,
+  ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -18,9 +18,8 @@ const PasswordInput = ({
         <input
           type={showPassword ? "text" : "password"}
           id="password"
-          name="password"
+          {...props}
           placeholder={placeholder}
-          required={required}
           className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 outline-none focus:border-black focus:ring-2 focus:ring-black/20 transition-all duration-300"
         />
 
