@@ -11,3 +11,11 @@
 .mini-arrow {
   @apply absolute -top-1 right-6 w-2 h-2 bg-black rotate-45 border-l border-t border-gray-700;
 }
+
+.btn-1 {
+  @apply bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
+}
+
+.btn-2 {
+  @apply border border-gray-300 rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer;
+}

@@ -56,14 +56,14 @@ const CreateForm = ({ handleClick }: CreateProps) => {
       <div className="flex flex-col sm:flex-row gap-4 mt-3">
         <button
           type="submit"
-          className="bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:opacity-90 active:scale-[0.98] cursor-pointer"
+          className="btn-1"
         >
           Publish Post
         </button>
 
         <button
           type="button"
-          className="border border-gray-300 rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:bg-gray-100 active:scale-[0.98] cursor-pointer"
+          className="btn-2"
           onClick={handleClick}
         >
           Cancel
