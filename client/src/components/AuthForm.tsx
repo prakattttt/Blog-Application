@@ -19,7 +19,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   const navigate = useNavigate();
 
-  if (isLoggedIn) navigate("/");
+useEffect(() => {
+  if (isLoggedIn) {
+navigate("/");
+}
+  }, [isLoggedIn, navigate]);
 
   const {
     register,
