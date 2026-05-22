@@ -9,7 +9,10 @@ import type {
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { registerUser, loginUser } from "../api/auth.api";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 
 export default function AuthForm({ mode }: { mode: AuthMode }) {
@@ -19,16 +22,17 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   const navigate = useNavigate();
 
-useEffect(() => {
-  if (isLoggedIn) {
-navigate("/");
-}
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
   }, [isLoggedIn, navigate]);
 
   const {
     register,
     control,
     handleSubmit,
+    formState: { errors },
   } = useForm<FormDataInterface>({
     defaultValues: {
       name: "",
@@ -39,22 +43,26 @@ navigate("/");
 
   async function registerFn({ name, email, password }: RegisterBody) {
     try {
-      const response = await registerUser({ name, email, password });
-      console.log(response);
+      await registerUser({ name, email, password });
+      toast.success("Account created successfully");
       navigate("/login");
     } catch (error) {
-      throw new Error("Failed to register the user!");
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Registration failed");
+      }
     }
   }
 
   async function loginFn({ email, password }: LoginBody) {
     try {
-      const response = await loginUser({ email, password });
+      await loginUser({ email, password });
+      toast.success("Logged in successfully");
       setIsLoggedIn(true);
-      console.log(response);
       navigate("/");
     } catch (error) {
-      throw new Error("Failed to login the user!");
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Login failed");
+      }
     }
   }
 
@@ -76,6 +84,7 @@ navigate("/");
           <FormField
             label="Username"
             type="text"
+            error={errors.name?.message}
             {...register("name", {
               required: {
                 value: true,
@@ -88,6 +97,7 @@ navigate("/");
 
         <FormField
           label="Email"
+          error={errors.email?.message}
           {...register("email", {
             required: {
               value: true,
@@ -98,11 +108,11 @@ navigate("/");
               message: "Invalid email address",
             },
           })}
-          type="email"
           placeholder="example@email.com"
         />
 
         <PasswordInput
+          error={errors.password?.message}
           {...register("password", {
             required: {
               value: true,
