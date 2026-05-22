@@ -20,7 +20,11 @@ const PasswordInput = ({
           id="password"
           {...props}
           placeholder={placeholder}
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 outline-none focus:border-black focus:ring-2 focus:ring-black/20 transition-all duration-300"
+          className={`w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 outline-none transition-all duration-300${
+            props.error
+              ? "border-red-400 focus:ring-2 focus:ring-red-200"
+              : "border-gray-300 focus:border-black focus:ring-2 focus:ring-black/20"
+          }`}
         />
 
         <button
@@ -35,6 +39,11 @@ const PasswordInput = ({
           )}
         </button>
       </div>
+      {props.error && (
+        <span className="text-sm text-red-500 font-medium animate-[fadeIn_0.2s_ease]">
+          {props.error}
+        </span>
+      )}
     </div>
   );
 };

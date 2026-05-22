@@ -118,6 +118,24 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               value: true,
               message: "Password is required",
             },
+
+            minLength: {
+              value: 8,
+              message: "Password must be at least 8 characters",
+            },
+
+            validate: {
+              hasUppercase: (value) =>
+                /[A-Z]/.test(value) ||
+                "Password must contain at least one uppercase letter",
+
+              hasLowercase: (value) =>
+                /[a-z]/.test(value) ||
+                "Password must contain at least one lowercase letter",
+
+              hasNumber: (value) =>
+                /\d/.test(value) || "Password must contain at least one number",
+            },
           })}
         />
 
