@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { logoutUser } from "../api/auth.api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 
 type DropdownProps = {
   closeDropdown: () => void;
@@ -12,13 +14,18 @@ const Dropdown = ({ closeDropdown }: DropdownProps) => {
   const { setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
 
-  function handleLogOut() {
-    closeDropdown();
-    setTimeout(async () => {
+  async function handleLogOut() {
+    try {
+      closeDropdown();
       await logoutUser();
       setIsLoggedIn(false);
+      toast.success("Logout successfull")
       navigate("/login");
-    }, 2000);
+    } catch(error) {
+      if(isAxiosError(error)) {
+        toast.error("Logout failed")
+      }
+    }
   }
 
   return (
