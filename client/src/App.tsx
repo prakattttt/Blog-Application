@@ -12,7 +12,7 @@ import Loader from "./components/Loader";
 import useAuth from "./hooks/useAuth";
 
 function App() {
-const { loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return <Loader />;
@@ -20,6 +20,17 @@ const { loading } = useAuth();
 
   return (
     <>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            borderRadius: "14px",
+            padding: "14px",
+            fontSize: "14px",
+          },
+        }}
+      />
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -30,6 +41,7 @@ const { loading } = useAuth();
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </>
