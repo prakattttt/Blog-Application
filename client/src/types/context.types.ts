@@ -7,5 +7,6 @@ export interface writeInterface {
 
 export interface AuthInterface{
     isLoggedIn: boolean,
+    loading: boolean
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }

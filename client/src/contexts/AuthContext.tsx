@@ -1,32 +1,42 @@
 import { createContext, useEffect, useState } from "react";
+import { isAxiosError } from "axios";
 import type { AuthInterface } from "../types/context.types";
 import { getMe } from "../api/auth.api";
 
 export const AuthContext = createContext<AuthInterface>({
   isLoggedIn: false,
-  setIsLoggedIn: () => {}
+  loading: true,
+  setIsLoggedIn: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function run() {
-      const data = await getMe();
+      try {
+        const data = await getMe();
 
-      console.log(data);
-      console.log(isLoggedIn);
-
-      if (data.success) {
-        setIsLoggedIn(true);
+        if (data.success) {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          if (error.response?.status !== 401) {
+            console.log(error.response?.data.message);
+          }
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
     run();
-  }, [isLoggedIn]);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading }}>
       {children}
     </AuthContext.Provider>
   );
