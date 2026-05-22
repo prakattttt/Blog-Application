@@ -8,6 +8,12 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 
 function App() {
+const { loading } = useAuth();
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <BrowserRouter>
