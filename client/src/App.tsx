@@ -6,6 +6,10 @@ import MyPosts from "./pages/MyPosts";
 import MainLayout from "./layouts/MainLayout";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ErrorPage from "./pages/ErrorPage";
+import { Toaster } from "react-hot-toast";
+import Loader from "./components/Loader";
+import useAuth from "./hooks/useAuth";
 
 function App() {
 const { loading } = useAuth();
