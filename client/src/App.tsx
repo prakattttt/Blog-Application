@@ -10,6 +10,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { Toaster } from "react-hot-toast";
 import Loader from "./components/Loader";
 import useAuth from "./hooks/useAuth";
+import UserInfo from "./pages/UserInfo";
 
 function App() {
   const { loading } = useAuth();
@@ -41,6 +42,7 @@ function App() {
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/user-info" element={<UserInfo />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

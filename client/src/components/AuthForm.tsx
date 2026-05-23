@@ -45,7 +45,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     try {
       await registerUser({ name, email, password });
       toast.success("Account created successfully");
-      navigate("/login");
+      navigate("/user-info", {
+        state: {
+          fromRegister: true,
+        },
+      });
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message || "Registration failed");
@@ -58,7 +62,9 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       await loginUser({ email, password });
       toast.success("Logged in successfully");
       setIsLoggedIn(true);
-      navigate("/");
+      navigate("/", {
+        replace: true
+      });
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message || "Login failed");
