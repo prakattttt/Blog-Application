@@ -24,7 +24,7 @@ interface IUserModel extends Model<IUser> {
     name: string,
     email: string,
     password: string,
-  ): Promise<{ success: boolean }>;
+  ): Promise<{ id: string }>;
 
   loginUser(
     email: string,
@@ -102,14 +102,14 @@ const UserSchema = new Schema<IUser, IUserModel>(
           throw new AppError("Email already exists!", 409);
         }
 
-        await this.create({
+        const user = await this.create({
           name,
           email,
           password,
         });
 
         return {
-          success: true,
+          id: user._id.toString(),
         };
       },
 
@@ -128,7 +128,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
 
         return {
           success: true,
-          id: user._id,
+          id: user._id.toString(),
         };
       },
 

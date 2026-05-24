@@ -30,18 +30,15 @@ export const getAllUsers: RequestHandler = expressAsyncHandler(
   },
 );
 
-export const setBio: RequestHandler = expressAsyncHandler(
-  async (req, res) => {
-    const id = req.params["id"] as string;
-    const { bio } = req.body || "";
+export const setBio: RequestHandler = expressAsyncHandler(async (req, res) => {
+  const id = req.params["id"] as string;
 
-    await User.setBio(id, bio);
+  const { bio } = req.body || "";
 
-    res.status(200).json(
-      { success: true }
-    )
-  }
-)
+  await User.setBio(id, bio);
+
+  res.status(200).json({ success: true });
+});
 
 export const getMe: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
@@ -72,13 +69,10 @@ export const registerUser: RequestHandler = expressAsyncHandler(
 
     const result = await User.registerUser(name, email, password);
 
-    if (!result.success) {
-      throw new AppError("Failed to register user", 400);
-    }
-
     res.status(201).json({
       success: true,
       message: "User registered successfully!",
+      id: result.id,
     });
   },
 );
