@@ -43,11 +43,12 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   async function registerFn({ name, email, password }: RegisterBody) {
     try {
-      await registerUser({ name, email, password });
+      const user = await registerUser({ name, email, password });
       toast.success("Account created successfully");
       navigate("/user-info", {
         state: {
           fromRegister: true,
+          id: user.id
         },
       });
     } catch (error) {

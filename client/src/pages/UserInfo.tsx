@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiUpload } from "react-icons/fi";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { setBio as updateBio } from "../api/auth.api";
 
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -46,15 +47,20 @@ const UserInfo = () => {
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
+    const id = location.state?.id as string | undefined;
 
-    if (image) {
-      formData.append("image", image);
+    if (!id) {
+      toast.error("Cannot get the registered user!");
+      navigate("/");
+      return;
     }
 
-    formData.append("bio", bio);
-
-    navigate("/login");
+    try {
+      await updateBio({ id, bio });
+      navigate("/login");
+    } catch (error) {
+      toast.error("Unable to update profile. Please try again.");
+    }
   };
 
   return (
