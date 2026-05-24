@@ -23,7 +23,7 @@ interface IUserModel extends Model<IUser> {
   registerUser(
     name: string,
     email: string,
-    pasword: string,
+    password: string,
   ): Promise<{ success: boolean }>;
 
   loginUser(
@@ -86,7 +86,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
           .select("-password");
       },
 
-      async findUser(id: number) {
+      async findUser(id: string) {
         return this.findById(id).select("-password");
       },
 
