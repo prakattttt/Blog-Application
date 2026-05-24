@@ -16,9 +16,9 @@ interface IUser {
 }
 
 interface IUserModel extends Model<IUser> {
-  getUsers(skip: number): Promise<IUser[]>;
+  getUsers(skip: number): Promise<IUser[] | null>;
 
-  findUser(id: string): Promise<IUser[]>;
+  findUser(id: string): Promise<IUser | null>;
 
   registerUser(
     name: string,
