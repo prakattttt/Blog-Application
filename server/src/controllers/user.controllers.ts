@@ -30,6 +30,19 @@ export const getAllUsers: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const setBio: RequestHandler = expressAsyncHandler(
+  async (req, res) => {
+    const id = req.params["id"] as string;
+    const { bio } = req.body || "";
+
+    await User.setBio(id, bio);
+
+    res.status(200).json(
+      { success: true }
+    )
+  }
+)
+
 export const getMe: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     if (!req.user) {

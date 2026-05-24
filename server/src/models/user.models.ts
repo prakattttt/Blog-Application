@@ -1,4 +1,4 @@
-import { model, Schema, type Model } from "mongoose";
+import { isValidObjectId, model, Schema, type Model } from "mongoose";
 import AppError from "../utils/AppError.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
@@ -30,6 +30,11 @@ interface IUserModel extends Model<IUser> {
     email: string,
     password: string,
   ): Promise<{ success: boolean; id: string }>;
+
+  setBio(
+    id: string,
+    bio: string
+  ) : Promise<void>
 }
 
 const UserSchema = new Schema<IUser, IUserModel>(
@@ -126,6 +131,18 @@ const UserSchema = new Schema<IUser, IUserModel>(
           id: user._id,
         };
       },
+
+      async setBio(id: string, bio: string) {
+        if(!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+
+        const user = await this.findById(id);
+         
+        if(!user) throw new AppError("User not found!", 400)
+
+        user.bio = bio;
+
+        await user.save();
+      }
     },
   },
 );
