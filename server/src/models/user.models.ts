@@ -11,6 +11,7 @@ interface IUser {
   email: string;
   password: string;
   bio?: string;
+  profileImage?: string
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -79,6 +80,11 @@ const UserSchema = new Schema<IUser, IUserModel>(
       type: String,
       default: "",
     },
+
+    profileImage: {
+      type: String,
+      default: ""
+    }
   },
   {
     timestamps: true,

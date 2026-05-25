@@ -92,7 +92,7 @@ const PostSchema = new Schema<IPost, IPostModel>(
 
       async getPosts(skip: number) {
         return this.find()
-          .populate("author", "name")
+          .populate("author", "name profileImage")
           .limit(12)
           .skip(skip * 12)
           .sort({ createdAt: -1 });
@@ -104,7 +104,7 @@ const PostSchema = new Schema<IPost, IPostModel>(
         }
 
         return this.find({ author: id })
-          .populate("author", "name")
+          .populate("author", "name profileImage")
           .sort({ createdAt: -1 });
       },
 
