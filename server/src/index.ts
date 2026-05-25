@@ -24,7 +24,9 @@ app.use(
   }),
 );
 
-app.use("/api", router)
+app.use("/api/users", userRouter);
+
+app.use("/api/posts", postRouter);
 
 app.use(notFoundHandler);
 
