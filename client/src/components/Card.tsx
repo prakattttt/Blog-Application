@@ -27,11 +27,13 @@ const Card = ({
         border border-gray-100
       "
     >
-      <img
-        src={imageSrc}
-        alt={`blog-img-${id}`}
-        className="w-full h-60 object-cover"
-      />
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt={`blog-img-${id}`}
+          className="w-full h-60 object-cover"
+        />
+      )}
 
       <div className="p-6 flex flex-col gap-5">
         <div className="flex items-center gap-4">

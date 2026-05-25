@@ -1,12 +1,21 @@
 export interface CardType {
-    id: number,
-    imageSrc: string,
-    userName: string,
-    timeSincePosted: string,
-    header: string,
-    description: string,
-    likes: number,
-    comments: number,
-    isBookmarked: boolean
-    profileImg: string
+  id: string;
+
+  imageSrc?: string;
+
+  userName: string;
+
+  timeSincePosted: string;
+
+  header: string;
+
+  description: string;
+
+  likes: number;
+
+  comments: number;
+
+  profileImg?: string;
+
+  isBookmarked?: boolean;
 }
