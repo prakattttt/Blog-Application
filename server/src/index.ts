@@ -7,7 +7,8 @@ import { PORT } from "./config/env.js";
 import connectToDb from "./config/db.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 
-import router from "./routes/user.routes.js";
+import userRouter from "./routes/user.routes.js";
+import postRouter from "./routes/post.routes.js";
 
 const app = express();
 
