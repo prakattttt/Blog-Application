@@ -29,6 +29,8 @@ interface IPostModel extends Model<IPost> {
   getPosts(skip: number): Promise<IPost[]>;
 
   getPostsByAuthor(id: string): Promise<IPost[]>;
+
+  deletePost(id: string): Promise<void>;
 }
 
 const PostSchema = new Schema<IPost, IPostModel>(
@@ -104,6 +106,14 @@ const PostSchema = new Schema<IPost, IPostModel>(
         return this.find({ author: id })
           .populate("author", "username email")
           .sort({ createdAt: -1 });
+      },
+
+      async deletePost(id: string) {
+        if (!isValidObjectId(id)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        await this.findByIdAndDelete(id);
       },
     },
   },

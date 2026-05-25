@@ -53,3 +53,17 @@ export const createPost: RequestHandler = expressAsyncHandler(
     });
   },
 );
+
+export const deletePost: RequestHandler = expressAsyncHandler(
+  async (req, res) => {
+    const author: string = req.params["id"] as string;
+
+    await Post.deletePost(author);
+
+    res.status(204).json({
+      success: true,
+      message: "Post deleted successfully!"
+    });
+  },
+);
+
