@@ -1,7 +1,7 @@
 export interface PostBody {
-    title: string, 
-    description: string,
-    imageSrc?: string
+  title: string;
+  description: string;
+  imageSrc?: string;
 }
 
 export interface PostCard {

@@ -1,12 +1,12 @@
-import type React from "react"
+import type React from "react";
 
 export interface writeInterface {
-    isOpen: boolean,
-    toggle: () => void
+  isOpen: boolean;
+  toggle: () => void;
 }
 
-export interface AuthInterface{
-    isLoggedIn: boolean,
-    loading: boolean
-    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+export interface AuthInterface {
+  isLoggedIn: boolean;
+  loading: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }

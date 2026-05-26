@@ -13,7 +13,7 @@ export interface RegisterBody {
 
 export interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  error?: string
+  error?: string;
 }
 
 export interface FormDataInterface {
