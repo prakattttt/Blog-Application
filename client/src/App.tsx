@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import Loader from "./components/Loader";
 import useAuth from "./hooks/useAuth";
 import UserInfo from "./pages/UserInfo";
+import Post from "./pages/Post";
 
 function App() {
   const { loading } = useAuth();
@@ -39,6 +40,7 @@ function App() {
             <Route path="/trending" element={<Trending />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/myposts" element={<MyPosts />} />
+            <Route path="/post" element={<Post />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
