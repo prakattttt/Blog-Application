@@ -1,5 +1,6 @@
 import type { CardType } from "../types/card.types";
 import { FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Card = ({
   id,
@@ -13,20 +14,10 @@ const Card = ({
   isBookmarked,
   profileImg,
 }: CardType) => {
+  const navigate = useNavigate();
+
   return (
-    <div
-      className="
-        bg-white
-        rounded-3xl
-        overflow-hidden
-        shadow-sm
-        hover:shadow-xl
-        transition-all
-        duration-300
-        hover:-translate-y-1
-        border border-gray-100
-      "
-    >
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"onClick={() => navigate(`/post`)}>
       {imageSrc && (
         <img
           src={imageSrc}
