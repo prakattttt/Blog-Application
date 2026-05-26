@@ -3,8 +3,8 @@ import { FiGithub, FiInstagram, FiTwitter, FiLinkedin } from "react-icons/fi";
 
 const Footer = () => {
   return (
-    <footer className="mt-24 border-t border-gray-200 bg-white/70 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 py-12">
+    <footer className="border-t border-gray-200 bg-white/70 backdrop-blur-md">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 pt-10 pb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <h1 className="text-3xl font-black tracking-tight text-black">
