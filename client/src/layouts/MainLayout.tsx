@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 import Create from "../components/Create";
+import Footer from "../components/Footer";
 
 import useWrite from "../hooks/useWrite";
 import { WriteProvider } from "../contexts/WriteContext";
@@ -15,6 +16,7 @@ const LayoutContent = () => {
       {isOpen && <Create />}
 
       <Outlet />
+      <Footer />
     </>
   );
 };
