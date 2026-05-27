@@ -6,12 +6,15 @@ import { getMe } from "../api/auth.api";
 export const AuthContext = createContext<AuthInterface>({
   isLoggedIn: false,
   loading: true,
+  user: null,
+  setUser: () => {},
   setIsLoggedIn: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function run() {
@@ -20,6 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (data.success) {
           setIsLoggedIn(true);
+          setUser(data.user);
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -36,7 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading, user }}>
       {children}
     </AuthContext.Provider>
   );
