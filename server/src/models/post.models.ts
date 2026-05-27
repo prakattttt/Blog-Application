@@ -28,6 +28,8 @@ interface IPostModel extends Model<IPost> {
 
   getPosts(skip: number): Promise<IPost[]>;
 
+  getSinglePost(id: string): Promise<IPost>;
+
   getPostsByAuthor(id: string): Promise<IPost[]>;
 
   deletePost(id: string): Promise<void>;
@@ -96,6 +98,14 @@ const PostSchema = new Schema<IPost, IPostModel>(
           .limit(12)
           .skip(skip * 12)
           .sort({ createdAt: -1 });
+      },
+
+      async getSinglePost(id: string) {
+        if (!isValidObjectId(id)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        return this.findById(id).populate("author", "name profileImage");
       },
 
       async getPostsByAuthor(id: string) {

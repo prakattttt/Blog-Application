@@ -29,6 +29,19 @@ export const getPosts: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const getSinglePost: RequestHandler = expressAsyncHandler(
+  async (req, res) => {
+    const id: string = req.params["id"] as string;
+
+    const posts = await Post.getSinglePost(id);
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
+  },
+);
+
 export const createPost: RequestHandler = expressAsyncHandler(
   async (req, res) => {
     const author: string = req.params["id"] as string;
@@ -62,8 +75,7 @@ export const deletePost: RequestHandler = expressAsyncHandler(
 
     res.status(204).json({
       success: true,
-      message: "Post deleted successfully!"
+      message: "Post deleted successfully!",
     });
   },
 );
-
