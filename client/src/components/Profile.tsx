@@ -1,4 +1,4 @@
-import profile from "../assets/profile.jpg";
+import profile from "../assets/profile.png";
 import useAuth from "../hooks/useAuth";
 import { FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -6,7 +6,7 @@ import Dropdown from "./Dropdown";
 import { useState } from "react";
 
 const Profile = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -16,7 +16,7 @@ const Profile = () => {
         <div className="relative flex items-center justify-center">
           <div className="relative group flex items-center justify-center">
             <img
-              src={profile}
+              src={user?.profileImage || profile}
               alt="profile"
               onClick={() => setOpenDropdown((prev) => !prev)}
               className="w-10 h-10 md:w-10 lg:w-12 lg:h-12 rounded-full object-cover cursor-pointer hover:scale-105 transition-all duration-300"
