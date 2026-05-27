@@ -18,6 +18,14 @@ export const getAuthorPosts = async (id: string) => {
     }
 }
 
+export const getSinglePost = async (id: string) => {
+    const response = await api.get(`/posts/${id}`);
+
+    if(response.data.success) {
+        return response.data.posts;
+    }
+}
+
 export const createPost = async (body: PostBody, id: string) => {
     const response = await api.post(`/posts/${id}`, body);
 

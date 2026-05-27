@@ -40,7 +40,7 @@ function App() {
             <Route path="/trending" element={<Trending />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/myposts" element={<MyPosts />} />
-            <Route path="/post" element={<Post />} />
+            <Route path="/post/:id" element={<Post />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
