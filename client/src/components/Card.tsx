@@ -17,7 +17,10 @@ const Card = ({
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"onClick={() => navigate(`/post`)}>
+    <div
+      onClick={() => navigate(`/post/${id}`)}
+      className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 cursor-pointer"
+    >
       {imageSrc && (
         <img
           src={imageSrc}
@@ -63,10 +66,10 @@ const Card = ({
           </div>
 
           <button
-            className={`
-              transition-colors duration-300
-              ${isBookmarked ? "text-black" : "text-gray-400 hover:text-black"}
-            `}
+            onClick={(e) => e.stopPropagation()}
+            className={`transition-colors duration-300 ${
+              isBookmarked ? "text-black" : "text-gray-400 hover:text-black"
+            }`}
           >
             <FaBookmark />
           </button>
