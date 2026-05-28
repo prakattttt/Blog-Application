@@ -32,3 +32,13 @@ export const setBio = async ({ id, bio }: { id: string; bio: string }) => {
 
   return response.data;
 };
+
+export const uploadProfileImage = async (image: File, id: string) => {
+  const formData = new FormData();
+
+  formData.append("profileImage", image);
+
+  const response = await api.post(`/users/set-profileImage/${id}`, formData);
+
+  return response.data;
+};
