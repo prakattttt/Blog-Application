@@ -12,7 +12,7 @@ const Create = () => {
   const { isLoggedIn } = useAuth();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-10">
+    <div className="fixed inset-0 z-50 flex items-center md:items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-10">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease]">
         <div className="p-6 md:p-8">
           {isLoggedIn ? (

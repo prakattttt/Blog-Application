@@ -43,7 +43,7 @@ const Post = () => {
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
-          <div className="flex items-center gap-4 px-6 py-5">
+          <div className={`flex items-center gap-4 px-6 ${post.imageSrc ? "py-5" : "py-3"}`}>
             <img
               src={post.author.profileImage || profile}
               alt="profile"
@@ -67,7 +67,7 @@ const Post = () => {
             />
           )}
 
-          <div className="p-6">
+          <div className={`${post.imageSrc ? "p-6" : "px-6"}`}>
             <h1 className="text-3xl font-extrabold leading-tight text-black">
               {post.title}
             </h1>
