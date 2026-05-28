@@ -8,7 +8,7 @@ import type {
 } from "../types/auth.types";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { registerUser, loginUser } from "../api/auth.api";
+import { registerUser, loginUser, getMe } from "../api/auth.api";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 
 export default function AuthForm({ mode }: { mode: AuthMode }) {
-  const { setIsLoggedIn, isLoggedIn } = useAuth();
+  const { setIsLoggedIn, isLoggedIn, setUser } = useAuth();
 
   const isLogin = mode === "login";
 
@@ -48,7 +48,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       navigate("/user-info", {
         state: {
           fromRegister: true,
-          id: user.id
+          id: user.id,
         },
       });
     } catch (error) {
@@ -61,10 +61,12 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   async function loginFn({ email, password }: LoginBody) {
     try {
       await loginUser({ email, password });
+      const data = await getMe();
       toast.success("Logged in successfully");
       setIsLoggedIn(true);
+      setUser(data.user);
       navigate("/", {
-        replace: true
+        replace: true,
       });
     } catch (error) {
       if (isAxiosError(error)) {

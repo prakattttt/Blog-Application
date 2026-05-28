@@ -11,7 +11,7 @@ type DropdownProps = {
 };
 
 const Dropdown = ({ closeDropdown }: DropdownProps) => {
-  const { setIsLoggedIn } = useAuth();
+  const { setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogOut() {
@@ -19,6 +19,7 @@ const Dropdown = ({ closeDropdown }: DropdownProps) => {
       closeDropdown();
       await logoutUser();
       setIsLoggedIn(false);
+      setUser(null);
       toast.success("Logout successfull")
       navigate("/login");
     } catch(error) {
