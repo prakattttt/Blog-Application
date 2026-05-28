@@ -6,7 +6,7 @@ import AskLogin from "../components/AskLogin";
 const Bookmarks = () => {
   const { isLoggedIn } = useAuth();
 
-  return isLoggedIn ? <MainSection {...content.bookmarks} /> : <AskLogin />;
+  return isLoggedIn ? <MainSection {...content.bookmarks} /> : <AskLogin menu={"bookmarks"}/>;
 };
 
 export default Bookmarks;

@@ -6,7 +6,7 @@ import AskLogin from "../components/AskLogin";
 const MyPosts = () => {
   const { isLoggedIn } = useAuth();
 
-  return isLoggedIn ? <MainSection {...content.myPosts} /> : <AskLogin />;
+  return isLoggedIn ? <MainSection {...content.myPosts} /> : <AskLogin menu={"posts"}/>;
 };
 
 export default MyPosts;

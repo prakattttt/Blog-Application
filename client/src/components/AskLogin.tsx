@@ -1,7 +1,7 @@
 import { FiLock, FiLogIn, FiArrowLeft } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 
-const AskLogin = () => {
+const AskLogin = ({ menu }: { menu: string }) => {
   const navigate = useNavigate();
 
   return (
@@ -16,7 +16,7 @@ const AskLogin = () => {
         </h1>
 
         <p className="mt-3 text-gray-500 leading-relaxed">
-          You need to login first to access this page and manage your posts.
+          You need to login first to access this page and manage your {menu}.
         </p>
 
         <div className="mt-8 flex items-center gap-3">
