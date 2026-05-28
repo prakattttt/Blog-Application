@@ -5,6 +5,8 @@ import AppError from "../utils/AppError.js";
 import { generateAccessTokens } from "../utils/tokenGenerator.js";
 import type { AuthRequest } from "../middlewares/authenticaton.js";
 import { env } from "../config/env.js";
+import cloudinary from "../utils/Cloudinary.js";
+import fs from "fs/promises";
 
 export interface registerInterface {
   name: string;
@@ -102,6 +104,38 @@ export const loginUser: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       message: "User logged in successfully!",
+    });
+  },
+);
+
+export const uploadProfileImage: RequestHandler = expressAsyncHandler(
+  async (req, res) => {
+    const file = req.file;
+
+    const id = req.params["id"];
+
+    if (!file) {
+      throw new AppError("No image uploaded!", 400);
+    }
+
+    if(!id) {
+      throw new AppError("User ID now found!!", 400);
+    }
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "blog-users",
+      resource_type: "image"
+    });
+
+    await User.findByIdAndUpdate(id, {
+      profileImage: result.secure_url,
+    });
+
+    await fs.unlink(file.path);
+
+    res.status(200).json({
+      success: true,
+      imageUrl: result.secure_url,
     });
   },
 );
