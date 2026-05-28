@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 import type { AuthInterface } from "../types/context.types";
+import type { UserInterface } from "../types/context.types";
 import { getMe } from "../api/auth.api";
 
 export const AuthContext = createContext<AuthInterface>({
@@ -13,8 +14,8 @@ export const AuthContext = createContext<AuthInterface>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<UserInterface | null>(null);
 
   useEffect(() => {
     async function run() {
@@ -40,7 +41,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading, user }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, setIsLoggedIn, loading, user, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -20,6 +20,6 @@ export interface AuthInterface {
   isLoggedIn: boolean;
   loading: boolean;
   user: null | UserInterface,
-  setUser?: React.Dispatch<React.SetStateAction<null | UserInterface>>
+  setUser: React.Dispatch<React.SetStateAction<null | UserInterface>>
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
