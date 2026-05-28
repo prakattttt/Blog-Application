@@ -16,7 +16,7 @@ const Profile = () => {
     );
   }
 
-  const profileImage = user?.profileImage ? user.profileImage : profile;
+  const profileImage = user?.profileImage || profile;
 
   return (
     <>
