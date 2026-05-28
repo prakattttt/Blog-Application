@@ -5,7 +5,7 @@ export interface writeInterface {
   toggle: () => void;
 }
 
-interface UserInterface {
+export interface UserInterface {
   _id: string;
   name: string;
   email: string;
