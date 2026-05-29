@@ -8,12 +8,15 @@ import Loader from "../components/Loader";
 import profile from "../assets/profile.png";
 import type { PostCard } from "../types/posts.types";
 
+import Comments from "../components/Comments";
+
 const Post = () => {
   const { id } = useParams();
 
   const [post, setPost] = useState<PostCard | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
     async function run() {
@@ -43,7 +46,9 @@ const Post = () => {
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
-          <div className={`flex items-center gap-4 px-6 ${post.imageSrc ? "py-5" : "py-3"}`}>
+          <div
+            className={`flex items-center gap-4 px-6 ${post.imageSrc ? "py-5" : "py-3"}`}
+          >
             <img
               src={post.author.profileImage || profile}
               alt="profile"
@@ -91,14 +96,16 @@ const Post = () => {
               )}
             </div>
 
-            <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-200">
+            <div className="flex items-center justify-between py-6 mt-6 border-t border-gray-200">
               <div className="flex items-center gap-6">
                 <button className="flex items-center gap-2 text-gray-700 hover:text-red-500 transition">
                   <FaHeart className="text-2xl" />
                   <span>{post.likes.length}</span>
                 </button>
 
-                <button className="flex items-center gap-2 text-gray-700 hover:text-black transition">
+                <button 
+                onClick={() => setShowComments(true)}
+                className="flex items-center gap-2 text-gray-700 hover:text-black transition">
                   <FaRegCommentDots className="text-2xl" />
                   <span>{post.commentsCount}</span>
                 </button>
@@ -108,6 +115,7 @@ const Post = () => {
                 <FaRegBookmark className="text-2xl" />
               </button>
             </div>
+            <Comments showComments={showComments} profile={profile}/>
           </div>
         </div>
 
