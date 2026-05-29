@@ -1,5 +1,43 @@
 import { Link } from "react-router-dom";
-import { FiGithub, FiInstagram, FiTwitter, FiLinkedin } from "react-icons/fi";
+import { FaGithub, FaInstagram, FaTwitter, FaFacebook } from "react-icons/fa";
+
+const menus = [
+  {
+    menu: "Home",
+    dest: "/",
+  },
+  {
+    menu: "Trending",
+    dest: "/trending",
+  },
+  {
+    menu: "My Posts",
+    dest: "/myposts",
+  },
+  {
+    menu: "Bookmarks",
+    dest: "/bookmarks",
+  },
+];
+
+const links = [
+  {
+    to: "/github",
+    icon: FaGithub,
+  },
+  {
+    to: "/twitter",
+    icon: FaTwitter,
+  },
+  {
+    to: "/instagram",
+    icon: FaInstagram,
+  },
+  {
+    to: "/facebook",
+    icon: FaFacebook,
+  },
+];
 
 const Footer = () => {
   return (
@@ -23,29 +61,13 @@ const Footer = () => {
             </h2>
 
             <ul className="mt-5 flex flex-col gap-3 text-sm text-gray-500">
-              <li>
-                <Link to="/" className="hover:text-black transition">
-                  Home
-                </Link>
-              </li>
-
-              <li>
-                <Link to="/trending" className="hover:text-black transition">
-                  Trending
-                </Link>
-              </li>
-
-              <li>
-                <Link to="/bookmarks" className="hover:text-black transition">
-                  Bookmarks
-                </Link>
-              </li>
-
-              <li>
-                <Link to="/myposts" className="hover:text-black transition">
-                  My Posts
-                </Link>
-              </li>
+              {menus.map((menu) => (
+                <li>
+                  <Link to={menu.dest} className="hover:text-black transition">
+                    {menu.menu}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -55,33 +77,14 @@ const Footer = () => {
             </h2>
 
             <div className="mt-5 flex items-center gap-4">
-              <a
-                href="#"
-                className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                <FiGithub className="text-lg" />
-              </a>
-
-              <a
-                href="#"
-                className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                <FiTwitter className="text-lg" />
-              </a>
-
-              <a
-                href="#"
-                className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                <FiInstagram className="text-lg" />
-              </a>
-
-              <a
-                href="#"
-                className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                <FiLinkedin className="text-lg" />
-              </a>
+              {links.map((link) => (
+                <Link
+                  to={link.to}
+                  className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
+                >
+                  <link.icon />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
