@@ -2,6 +2,8 @@ import expressAsyncHandler from "express-async-handler";
 import type { RequestHandler } from "express";
 import { Post } from "../models/post.models.js";
 import AppError from "../utils/AppError.js";
+import fs from "fs/promises";
+import cloudinary from "../utils/Cloudinary.js";
 
 export const getAllPosts: RequestHandler = expressAsyncHandler(
   async (req, res) => {
@@ -44,20 +46,36 @@ export const getSinglePost: RequestHandler = expressAsyncHandler(
 
 export const createPost: RequestHandler = expressAsyncHandler(
   async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+
     const author: string = req.params["id"] as string;
 
-    const { title, description, imageSrc } = req.body || {};
+    const file = req.file;
 
-    if (!title && !description) {
+    if (!file) {
+      throw new AppError("No image uploaded!", 400);
+    }
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "blog-posts",
+      resource_type: "image",
+    });
+
+    const { title, description } = req.body || {};
+
+    if (!title || !description) {
       throw new AppError("No title or description!", 400);
     }
 
     const post = await Post.createPost({
       title,
       description,
-      imageSrc,
+      imageSrc: result.secure_url || "",
       author,
     });
+
+    await fs.unlink(file.path);
 
     res.status(201).json({
       success: true,
