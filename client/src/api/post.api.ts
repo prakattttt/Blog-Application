@@ -1,7 +1,5 @@
 import api from "./axios";
 
-import type { PostBody } from "../types/posts.types";
-
 export const getAllPosts = async () => {
     const response = await api.get("/posts");
 
@@ -26,7 +24,7 @@ export const getSinglePost = async (id: string) => {
     }
 }
 
-export const createPost = async (body: PostBody, id: string) => {
+export const createPost = async (body: FormData, id: string) => {
     const response = await api.post(`/posts/${id}`, body);
 
     if(response.data.success) {
