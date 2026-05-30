@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createPost } from "../api/post.api";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 type CreateProps = {
   handleClick: () => void;
@@ -12,16 +13,22 @@ const CreateForm = ({ handleClick }: CreateProps) => {
   const [content, setContent] = useState({ title: "", description: "" });
   const [image, setImage] = useState<File | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    if (file.size > 4 * 1024 * 1024) {
-      toast.error("Image size must be less than 4MB");
-      return;
+    try {
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 4,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+
+      setImage(compressedFile);
+    } catch (error) {
+      toast.error("Failed to compress image");
     }
-    setImage(file);
   };
 
   const handleContentChange = (
