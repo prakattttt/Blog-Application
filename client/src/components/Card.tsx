@@ -19,55 +19,73 @@ const Card = ({
   return (
     <div
       onClick={() => navigate(`/post/${id}`)}
-      className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 cursor-pointer"
+      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
     >
-      {imageSrc && (
-        <img
-          src={imageSrc}
-          alt={`blog-img-${id}`}
-          className="w-full h-60 object-cover"
-        />
+      {imageSrc ? (
+        <div className="overflow-hidden">
+          <img
+            src={imageSrc}
+            alt={`blog-img-${id}`}
+            className="w-full h-56 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+          />
+        </div>
+      ) : (
+        <div className="h-56 bg-linear-to-br from-gray-100 via-gray-50 to-gray-200 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-sm font-semibold text-gray-500">
+              No Cover Image
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              Read the story inside
+            </div>
+          </div>
+        </div>
       )}
 
-      <div className="p-6 flex flex-col gap-5">
-        <div className="flex items-center gap-4">
+      <div className="p-5 flex flex-col gap-4 flex-1">
+        <div className="flex items-center gap-3">
           <img
             src={profileImg}
-            alt={`profile-${id}`}
-            className="w-12 h-12 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover"
           />
-
-          <div>
-            <h3 className="font-semibold text-sm">{userName}</h3>
-
-            <p className="text-gray-500 text-xs">{timeSincePosted}</p>
+          <div className="leading-tight">
+            <h3 className="text-sm font-semibold text-gray-900">{userName}</h3>
+            <p className="text-xs text-gray-500">{timeSincePosted}</p>
           </div>
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold mb-3 leading-tight">{header}</h2>
+        <div className="flex-1">
+          <h2 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-black">
+            {header}
+          </h2>
 
-          <p className="text-gray-500 leading-relaxed line-clamp-3">
+          <p className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-3">
             {description}
           </p>
         </div>
 
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center gap-6 text-gray-500">
-            <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center gap-5 text-gray-500 text-sm">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 hover:text-red-500 transition"
+            >
               <FaHeart />
               <span>{likes}</span>
-            </div>
+            </button>
 
-            <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 hover:text-black transition"
+            >
               <FaRegCommentDots />
               <span>{comments}</span>
-            </div>
+            </button>
           </div>
 
           <button
             onClick={(e) => e.stopPropagation()}
-            className={`transition-colors duration-300 ${
+            className={`transition ${
               isBookmarked ? "text-black" : "text-gray-400 hover:text-black"
             }`}
           >
