@@ -9,10 +9,13 @@ import { getAllPosts } from "../api/post.api";
 import type { PostCard } from "../types/posts.types";
 
 import Loader from "./Loader";
+import useWrite from "../hooks/useWrite";
 
 const Cards = () => {
   const [posts, setPosts] = useState<PostCard[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { refreshPosts } = useWrite();
 
   useEffect(() => {
     async function fetchPosts() {
@@ -30,7 +33,7 @@ const Cards = () => {
     }
 
     fetchPosts();
-  }, []);
+  }, [refreshPosts]);
 
   if (loading) {
     return <Loader />;

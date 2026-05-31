@@ -3,6 +3,7 @@ import { createPost } from "../api/post.api";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import useWrite from "../hooks/useWrite";
 
 type CreateProps = {
   handleClick: () => void;
@@ -10,6 +11,7 @@ type CreateProps = {
 
 const CreateForm = ({ handleClick }: CreateProps) => {
   const { user } = useAuth();
+  const { triggerRefresh } = useWrite();
   const [content, setContent] = useState({ title: "", description: "" });
   const [image, setImage] = useState<File | null>(null);
 
@@ -58,6 +60,8 @@ const CreateForm = ({ handleClick }: CreateProps) => {
       }
 
       const message = await createPost(formData, user._id);
+
+      triggerRefresh();
 
       handleClick();
 
