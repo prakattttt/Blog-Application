@@ -46,21 +46,21 @@ export const getSinglePost: RequestHandler = expressAsyncHandler(
 
 export const createPost: RequestHandler = expressAsyncHandler(
   async (req, res) => {
-    console.log(req.body);
-    console.log(req.file);
-
     const author: string = req.params["id"] as string;
-
     const file = req.file;
 
-    if (!file) {
-      throw new AppError("No image uploaded!", 400);
-    }
+    let imageSrc = "";
 
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: "blog-posts",
-      resource_type: "image",
-    });
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "blog-posts",
+        resource_type: "image",
+      });
+
+      imageSrc = result.secure_url || "";
+
+      await fs.unlink(file.path);
+    }
 
     const { title, description } = req.body || {};
 
@@ -71,11 +71,9 @@ export const createPost: RequestHandler = expressAsyncHandler(
     const post = await Post.createPost({
       title,
       description,
-      imageSrc: result.secure_url || "",
+      imageSrc,
       author,
     });
-
-    await fs.unlink(file.path);
 
     res.status(201).json({
       success: true,
