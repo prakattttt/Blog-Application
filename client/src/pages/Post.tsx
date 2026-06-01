@@ -1,22 +1,31 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { FaHeart, FaRegCommentDots, FaRegBookmark } from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaRegComment,
+  FaRegBookmark,
+} from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 
 import { getSinglePost } from "../api/post.api";
 import Loader from "../components/Loader";
 import profile from "../assets/profile.png";
+import useAuth from "../hooks/useAuth";
 import type { PostCard } from "../types/posts.types";
+import { toggleLike } from "../api/post.api";
 
 import Comments from "../components/Comments";
 
 const Post = () => {
   const { id } = useParams();
+  const { user } = useAuth();
 
   const [post, setPost] = useState<PostCard | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     async function run() {
@@ -26,13 +35,17 @@ const Post = () => {
         const data = await getSinglePost(id);
 
         setPost(data);
+
+        if (user?._id) {
+          setIsLiked(data.likes.includes(user._id));
+        }
       } finally {
         setLoading(false);
       }
     }
 
     run();
-  }, [id]);
+  }, [id, user]);
 
   if (loading) {
     return <Loader />;
@@ -41,6 +54,29 @@ const Post = () => {
   if (!post) {
     return <Navigate to="/" replace />;
   }
+
+  const handleLike = async () => {
+    if (!id || !post) return;
+
+    try {
+      const liked = (await toggleLike(id)) as boolean;
+
+      setIsLiked(liked);
+
+      setPost((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          likes: liked
+            ? [...prev.likes, user!._id]
+            : prev.likes.filter((likeId) => likeId !== user!._id),
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
@@ -98,15 +134,27 @@ const Post = () => {
 
             <div className="flex items-center justify-between py-6 mt-6 border-t border-gray-200">
               <div className="flex items-center gap-6">
-                <button className="flex items-center gap-2 text-gray-700 hover:text-red-500 transition">
-                  <FaHeart className="text-2xl" />
+                <button
+                  onClick={handleLike}
+                  className={`flex items-center gap-2 transition ${
+                    isLiked
+                      ? "text-red-500"
+                      : "text-gray-700 hover:text-red-500"
+                  }`}
+                >
+                  {isLiked ? (
+                    <FaHeart className="text-2xl" />
+                  ) : (
+                    <FaRegHeart className="text-2xl" />
+                  )}
                   <span>{post.likes.length}</span>
                 </button>
 
-                <button 
-                onClick={() => setShowComments(true)}
-                className="flex items-center gap-2 text-gray-700 hover:text-black transition">
-                  <FaRegCommentDots className="text-2xl" />
+                <button
+                  onClick={() => setShowComments(true)}
+                  className="flex items-center gap-2 text-gray-700 hover:text-black transition"
+                >
+                  <FaRegComment className="text-2xl" />
                   <span>{post.commentsCount}</span>
                 </button>
               </div>
@@ -115,7 +163,7 @@ const Post = () => {
                 <FaRegBookmark className="text-2xl" />
               </button>
             </div>
-            <Comments showComments={showComments} profile={profile}/>
+            <Comments showComments={showComments} profile={profile} />
           </div>
         </div>
 
