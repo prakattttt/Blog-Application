@@ -32,6 +32,8 @@ interface IPostModel extends Model<IPost> {
 
   getPostsByAuthor(id: string): Promise<IPost[]>;
 
+  toggleLike(author: string, postId: string): Promise<boolean>;
+
   deletePost(id: string): Promise<void>;
 }
 
@@ -116,6 +118,36 @@ const PostSchema = new Schema<IPost, IPostModel>(
         return this.find({ author: id })
           .populate("author", "name profileImage")
           .sort({ createdAt: -1 });
+      },
+
+      async toggleLike(author: string, postId: string) {
+        if (!isValidObjectId(author) || !isValidObjectId(postId)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        const authorId = new Types.ObjectId(author);
+
+        const post = await this.findById(postId);
+
+        if (!post) {
+          throw new AppError("Post not found!", 404);
+        }
+
+        const alreadyLiked = post.likes.some((user) => user.equals(authorId));
+
+        if (alreadyLiked) {
+          post.likes = post.likes.filter((user) => !user.equals(authorId));
+
+          await post.save();
+
+          return false;
+        }
+
+        post.likes.push(authorId);
+
+        await post.save();
+
+        return true;
       },
 
       async deletePost(id: string) {

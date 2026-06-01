@@ -4,6 +4,7 @@ import { Post } from "../models/post.models.js";
 import AppError from "../utils/AppError.js";
 import fs from "fs/promises";
 import cloudinary from "../utils/Cloudinary.js";
+import type { AuthRequest } from "../middlewares/authenticaton.js";
 
 export const getAllPosts: RequestHandler = expressAsyncHandler(
   async (req, res) => {
@@ -79,6 +80,22 @@ export const createPost: RequestHandler = expressAsyncHandler(
       success: true,
       message: "Post created successfully!",
       post,
+    });
+  },
+);
+
+export const toggleLike: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    if (!req.user) throw new AppError("User not found!", 404);
+    const author: string = req.user?.id;
+
+    const postId: string = req.params["id"] as string;
+
+    const isLiked = await Post.toggleLike(author, postId);
+
+    res.status(200).json({
+      success: true,
+      isLiked
     });
   },
 );
