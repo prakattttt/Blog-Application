@@ -10,7 +10,11 @@ import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 
+import morgan from "morgan"
+
 const app = express();
+
+app.use(morgan("dev"));
 
 app.use(express.json());
 
