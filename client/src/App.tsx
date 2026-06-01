@@ -12,6 +12,7 @@ import Loader from "./components/Loader";
 import useAuth from "./hooks/useAuth";
 import UserInfo from "./pages/UserInfo";
 import Post from "./pages/Post";
+import ScrollToTop from "./components/scrollToTop";
 
 function App() {
   const { loading } = useAuth();
@@ -34,6 +35,8 @@ function App() {
       />
 
       <BrowserRouter>
+        <ScrollToTop />
+
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
