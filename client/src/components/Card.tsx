@@ -1,6 +1,7 @@
 import type { CardType } from "../types/card.types";
 import { FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 const Card = ({
   id,
@@ -59,9 +60,9 @@ const Card = ({
             {header}
           </h2>
 
-          <p className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-3">
-            {description}
-          </p>
+          <div className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-3">
+            <ReactMarkdown>{description}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">

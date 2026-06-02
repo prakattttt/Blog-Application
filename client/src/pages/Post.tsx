@@ -14,6 +14,7 @@ import profile from "../assets/profile.png";
 import useAuth from "../hooks/useAuth";
 import type { PostCard } from "../types/posts.types";
 import { toggleLike } from "../api/post.api";
+import ReactMarkdown from "react-markdown";
 
 import Comments from "../components/Comments";
 
@@ -114,13 +115,13 @@ const Post = () => {
             </h1>
 
             <div className="mt-4">
-              <p
-                className={`text-gray-600 leading-relaxed text-[15px] ${
+              <div
+                className={`text-gray-800 prose max-w-none whitespace-pre-wrap ${
                   !expanded && "line-clamp-5"
                 }`}
               >
-                {post.description}
-              </p>
+                <ReactMarkdown>{post.description}</ReactMarkdown>
+              </div>
 
               {post.description.length > 250 && (
                 <button

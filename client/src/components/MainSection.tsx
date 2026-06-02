@@ -7,7 +7,7 @@ const MainSection = ({ header, description }: Content) => {
       <div className="mb-10">
         <h1 className="text-4xl font-bold tracking-tight">{header}</h1>
 
-        <p className="text-md text-gray-500 mt-3">{description}</p>
+        <p className="text-md text-gray-500 mt-3 whitespace-pre-wrap">{description}</p>
       </div>
 
       <Cards />
