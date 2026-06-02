@@ -12,9 +12,12 @@ export const getAllPosts: RequestHandler = expressAsyncHandler(
 
     const posts = await Post.getPosts(skip);
 
+    const postNo: number = await Post.countDocuments();
+
     res.status(200).json({
       success: true,
       posts,
+      totalPages: Math.ceil(postNo / 12) 
     });
   },
 );
