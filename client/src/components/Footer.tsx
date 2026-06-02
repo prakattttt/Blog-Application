@@ -62,7 +62,7 @@ const Footer = () => {
 
             <ul className="mt-5 flex flex-col gap-3 text-sm text-gray-500">
               {menus.map((menu) => (
-                <li>
+                <li key={menu.menu}>
                   <Link to={menu.dest} className="hover:text-black transition">
                     {menu.menu}
                   </Link>
@@ -77,8 +77,9 @@ const Footer = () => {
             </h2>
 
             <div className="mt-5 flex items-center gap-4">
-              {links.map((link) => (
+              {links.map((link, idx) => (
                 <Link
+                key={idx}
                   to={link.to}
                   className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
                 >
