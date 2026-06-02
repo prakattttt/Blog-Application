@@ -9,7 +9,7 @@ const router: Router = express.Router();
 
 router.get("/", getAllPosts);
 
-router.get("/me/:id", getPosts);
+router.get("/me", authenticateUser, getPosts);
 
 router.get("/:id", getSinglePost);
 

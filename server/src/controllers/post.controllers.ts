@@ -17,20 +17,25 @@ export const getAllPosts: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       posts,
-      totalPages: Math.ceil(postNo / 12) 
+      totalPages: Math.ceil(postNo / 12),
     });
   },
 );
 
 export const getPosts: RequestHandler = expressAsyncHandler(
-  async (req, res) => {
-    const id: string = req.params["id"] as string;
+  async (req: AuthRequest, res) => {
+    const id: string = req.user?.id as string;
 
-    const posts = await Post.getPostsByAuthor(id);
+    const skip: number = Number(req.query["skip"]) || 0;
+
+    const posts = await Post.getPostsByAuthor(id, skip);
+
+    const postNumber = await Post.countDocuments({ author: id });
 
     res.status(200).json({
       success: true,
       posts,
+      totalPages: Math.ceil(postNumber / 12),
     });
   },
 );
@@ -98,7 +103,7 @@ export const toggleLike: RequestHandler = expressAsyncHandler(
 
     res.status(200).json({
       success: true,
-      isLiked
+      isLiked,
     });
   },
 );

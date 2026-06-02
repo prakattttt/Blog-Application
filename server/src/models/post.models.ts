@@ -30,7 +30,7 @@ interface IPostModel extends Model<IPost> {
 
   getSinglePost(id: string): Promise<IPost>;
 
-  getPostsByAuthor(id: string): Promise<IPost[]>;
+  getPostsByAuthor(id: string, skip: number): Promise<IPost[]>;
 
   toggleLike(author: string, postId: string): Promise<boolean>;
 
@@ -42,13 +42,13 @@ const PostSchema = new Schema<IPost, IPostModel>(
     title: {
       type: String,
       required: [true, "Title is required!"],
-      trim: true
+      trim: true,
     },
 
     description: {
       type: String,
       required: [true, "Description is required!"],
-      trim: true
+      trim: true,
     },
 
     imageSrc: {
@@ -109,13 +109,15 @@ const PostSchema = new Schema<IPost, IPostModel>(
         return this.findById(id).populate("author", "name profileImage");
       },
 
-      async getPostsByAuthor(id: string) {
+      async getPostsByAuthor(id: string, skip: number) {
         if (!isValidObjectId(id)) {
           throw new AppError("Invalid ID!", 400);
         }
 
         return this.find({ author: id })
           .populate("author", "name profileImage")
+          .limit(12)
+          .skip(skip * 12)
           .sort({ createdAt: -1 });
       },
 
