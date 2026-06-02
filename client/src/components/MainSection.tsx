@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import type { Content } from "../types/content.types";
 import Pagination from "@mui/material/Pagination";
 import Cards from "./Cards";
-import { getAllPosts } from "../api/post.api";
+import { getAllPosts, getAuthorPosts } from "../api/post.api";
 import type { GetPostData } from "../types/posts.types";
 
-const MainSection = ({ header, description }: Content) => {
+const MainSection = ({ type, header, description }: Content) => {
   const [page, setPage] = useState(1);
 
   const [data, setData] = useState<GetPostData>({
@@ -21,7 +21,16 @@ const MainSection = ({ header, description }: Content) => {
       try {
         setLoading(true);
 
-        const response = await getAllPosts(page - 1);
+        let response;
+
+        switch (type) {
+          case "myPosts":
+            response = await getAuthorPosts(page - 1);
+            break;
+          default:
+            response = await getAllPosts(page - 1);
+        }
+
         setData(response);
       } catch (error) {
         console.error(error);
@@ -31,7 +40,7 @@ const MainSection = ({ header, description }: Content) => {
     };
 
     fetchPosts();
-  }, [page]);
+  }, [page, type]);
 
   return (
     <section className="px-6 py-10 max-w-7xl mx-auto">
@@ -43,7 +52,7 @@ const MainSection = ({ header, description }: Content) => {
         </p>
       </div>
 
-      <Cards posts={data.posts} loading={loading}/>
+      <Cards posts={data.posts} loading={loading} />
 
       <div className="flex justify-center mt-16">
         <Pagination
