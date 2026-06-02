@@ -8,11 +8,11 @@ export const getAllPosts = async (page: number = 0) => {
   }
 };
 
-export const getAuthorPosts = async (id: string) => {
-  const response = await api.get(`/posts/me/${id}`);
+export const getAuthorPosts = async (page: number = 0) => {
+  const response = await api.get(`/posts/me?skip=${page}`);
 
   if (response.data.success) {
-    return response.data.posts;
+    return response.data;
   }
 };
 
