@@ -42,14 +42,13 @@ const PostSchema = new Schema<IPost, IPostModel>(
     title: {
       type: String,
       required: [true, "Title is required!"],
-      trim: true,
-      maxlength: 50,
+      trim: true
     },
 
     description: {
       type: String,
       required: [true, "Description is required!"],
-      trim: true,
+      trim: true
     },
 
     imageSrc: {
