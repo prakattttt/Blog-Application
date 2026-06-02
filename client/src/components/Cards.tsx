@@ -1,40 +1,10 @@
-import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import profile from "../assets/profile.png";
-
 import Card from "./Card";
-
-import { getAllPosts } from "../api/post.api";
-
-import type { PostCard } from "../types/posts.types";
-
 import Loader from "./Loader";
-import useWrite from "../hooks/useWrite";
+import type { CardsProps } from "../types/posts.types";
 
-const Cards = () => {
-  const [posts, setPosts] = useState<PostCard[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const { refreshPosts } = useWrite();
-
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const data = await getAllPosts();
-
-        if (data) {
-          setPosts(data);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPosts();
-  }, [refreshPosts]);
-
+const Cards = ({ posts, loading }: CardsProps) => {
   if (loading) {
     return <Loader />;
   }

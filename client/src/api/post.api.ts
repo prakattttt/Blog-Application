@@ -1,10 +1,10 @@
 import api from "./axios";
 
-export const getAllPosts = async () => {
-  const response = await api.get("/posts");
+export const getAllPosts = async (page: number = 0) => {
+  const response = await api.get(`/posts?skip=${page}`);
 
   if (response.data.success) {
-    return response.data.posts;
+    return response.data;
   }
 };
 

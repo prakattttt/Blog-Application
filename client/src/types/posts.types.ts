@@ -19,3 +19,14 @@ export interface PostCard {
     profileImage?: string;
   };
 }
+
+export interface GetPostData {
+  success: boolean,
+  posts: PostCard[],
+  totalPages: number
+}
+
+export interface CardsProps {
+  posts: PostCard[];
+  loading: boolean
+}
