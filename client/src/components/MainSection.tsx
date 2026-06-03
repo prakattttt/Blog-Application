@@ -4,9 +4,12 @@ import Pagination from "@mui/material/Pagination";
 import Cards from "./Cards";
 import { getAllPosts, getAuthorPosts } from "../api/post.api";
 import type { GetPostData } from "../types/posts.types";
+import useWrite from "../hooks/useWrite";
 
 const MainSection = ({ type, header, description }: Content) => {
   const [page, setPage] = useState(1);
+
+  const { refreshPosts } = useWrite();
 
   const [data, setData] = useState<GetPostData>({
     success: false,
@@ -40,7 +43,7 @@ const MainSection = ({ type, header, description }: Content) => {
     };
 
     fetchPosts();
-  }, [page, type]);
+  }, [page, type, refreshPosts]);
 
   return (
     <section className="px-6 py-10 max-w-7xl mx-auto">
