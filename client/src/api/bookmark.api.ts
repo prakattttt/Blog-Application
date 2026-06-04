@@ -1,0 +1,17 @@
+import api from "./axios";
+
+export const toggleBookmark = async (postId: string) => {
+  const response = await api.post(`/bookmarks/toggle/${postId}`);
+
+  if (response.data.success) {
+    return response.data.bookmarked as boolean;
+  }
+
+  return false;
+};
+
+export const getBookmarks = async (skip: number = 0) => {
+  const response = await api.get(`/bookmarks?skip=${skip}`);
+
+  return response.data;
+};
