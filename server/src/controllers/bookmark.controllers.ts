@@ -6,20 +6,17 @@ import { Bookmark } from "../models/bookmark.models.js";
 
 export const getBookmarkedPosts: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
-    const user: string = req.user?.id as string;
-
-    const skip: number = Number(req.query["skip"]) || 0;
+    const user = req.user?.id as string;
+    const skip = Number(req.query["skip"]) || 0;
 
     const bookmarks = await Bookmark.getBookmarks(user, skip);
 
-    const bookmarkNumber = await Bookmark.countDocuments({
-      author: user,
-    });
+    const totalPosts = bookmarks?.posts.length ?? 0;
 
     res.status(200).json({
       success: true,
-      bookmarks,
-      totalPages: Math.ceil(bookmarkNumber / 12),
+      posts: bookmarks?.posts ?? [],
+      totalPages: Math.ceil(totalPosts / 12),
     });
   },
 );
