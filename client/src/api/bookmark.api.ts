@@ -10,8 +10,10 @@ export const toggleBookmark = async (postId: string) => {
   return false;
 };
 
-export const getBookmarks = async (skip: number = 0) => {
+export const getBookmarkedPosts = async (skip: number = 0) => {
   const response = await api.get(`/bookmarks?skip=${skip}`);
 
-  return response.data;
+  if (response.data.success) {
+    return response.data;
+  }
 };

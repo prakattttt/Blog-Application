@@ -9,6 +9,12 @@ const Cards = ({ posts, loading }: CardsProps) => {
     return <Loader />;
   }
 
+  if (!posts) {
+    return (
+      <div className="text-center py-20 text-gray-500">No posts available.</div>
+    );
+  }
+
   if (!posts.length) {
     return (
       <div className="text-center py-20 text-gray-500">No posts available.</div>
