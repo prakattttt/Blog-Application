@@ -5,6 +5,7 @@ import Cards from "./Cards";
 import { getAllPosts, getAuthorPosts } from "../api/post.api";
 import type { GetPostData } from "../types/posts.types";
 import useWrite from "../hooks/useWrite";
+import { getBookmarkedPosts } from "../api/bookmark.api";
 
 const MainSection = ({ type, header, description }: Content) => {
   const [page, setPage] = useState(1);
@@ -29,6 +30,9 @@ const MainSection = ({ type, header, description }: Content) => {
         switch (type) {
           case "myPosts":
             response = await getAuthorPosts(page - 1);
+            break;
+          case "bookmarks":
+            response = await getBookmarkedPosts(page - 1);
             break;
           default:
             response = await getAllPosts(page - 1);
