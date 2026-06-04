@@ -4,7 +4,7 @@ import AppError from "../utils/AppError.js";
 interface IBookmark {
   user: Types.ObjectId;
 
-  post: Types.ObjectId[];
+  posts: Types.ObjectId[];
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -25,7 +25,7 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
       unique: true,
     },
 
-    post: [
+    posts: [
       {
         type: Schema.Types.ObjectId,
         ref: "Post",
@@ -46,23 +46,23 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
         if (!bookmark) {
           bookmark = await this.create({
             user: author,
-            post: [],
+            posts: [],
           });
         }
 
         const postId = new Types.ObjectId(post);
 
-        const isBookmarked = bookmark.post.some((id) => id.equals(postId));
+        const isBookmarked = bookmark.posts.some((id) => id.equals(postId));
 
         if (isBookmarked) {
-          bookmark.post = bookmark.post.filter((id) => !id.equals(postId));
+          bookmark.posts = bookmark.posts.filter((id) => !id.equals(postId));
 
           await bookmark.save();
 
           return false;
         }
 
-        bookmark.post.push(postId);
+        bookmark.posts.push(postId);
 
         await bookmark.save();
 
@@ -75,7 +75,7 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
         }
 
         const bookmark = await this.findOne({ user: author }).populate({
-          path: "post",
+          path: "posts",
           options: {
             skip,
             limit: 12,
