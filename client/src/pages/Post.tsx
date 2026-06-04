@@ -5,6 +5,7 @@ import {
   FaRegHeart,
   FaRegComment,
   FaRegBookmark,
+  FaBookmark,
 } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -17,6 +18,7 @@ import { toggleLike } from "../api/post.api";
 import ReactMarkdown from "react-markdown";
 
 import Comments from "../components/Comments";
+import { getBookmarkedPosts, toggleBookmark } from "../api/bookmark.api";
 
 const Post = () => {
   const { id } = useParams();
@@ -27,15 +29,27 @@ const Post = () => {
   const [expanded, setExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     async function run() {
       try {
         if (!id) return;
 
-        const data = await getSinglePost(id);
+        const [data, bookmark] = await Promise.all([
+          getSinglePost(id),
+          getBookmarkedPosts(),
+        ]);
 
         setPost(data);
+
+        if (id) {
+          if (id) {
+            setIsBookmarked(
+              bookmark.posts.some((post: PostCard) => post._id === id),
+            );
+          }
+        }
 
         if (user?._id) {
           setIsLiked(data.likes.includes(user._id));
@@ -74,6 +88,18 @@ const Post = () => {
             : prev.likes.filter((likeId) => likeId !== user!._id),
         };
       });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!id || !post) return;
+
+    try {
+      const bookmarked = (await toggleBookmark(id)) as boolean;
+
+      setIsBookmarked(bookmarked);
     } catch (error) {
       console.error(error);
     }
@@ -160,8 +186,17 @@ const Post = () => {
                 </button>
               </div>
 
-              <button className="text-gray-700 hover:text-black transition">
-                <FaRegBookmark className="text-2xl" />
+              <button
+                onClick={handleBookmark}
+                className={`flex items-center gap-2 ${
+                  isBookmarked ? "text-black" : "text-gray-700 hover:text-black"
+                }`}
+              >
+                {isBookmarked ? (
+                  <FaBookmark className="text-2xl" />
+                ) : (
+                  <FaRegBookmark className="text-2xl" />
+                )}
               </button>
             </div>
             <Comments showComments={showComments} profile={profile} />
