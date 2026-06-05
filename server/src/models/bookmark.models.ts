@@ -76,6 +76,9 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
 
         const bookmark = await this.findOne({ user: author }).populate({
           path: "posts",
+          populate: {
+            path: "author",
+          },
           options: {
             skip,
             limit: 12,
