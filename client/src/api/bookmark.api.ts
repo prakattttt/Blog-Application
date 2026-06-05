@@ -17,3 +17,11 @@ export const getBookmarkedPosts = async (skip: number = 0) => {
     return response.data;
   }
 };
+
+export const getIsBookmarked = async (id: string) => {
+  const response = await api.get(`/bookmarks/${id}`);
+
+  if (response.data.success) {
+    return response.data.isBookmarked;
+  }
+};

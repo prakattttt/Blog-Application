@@ -3,8 +3,22 @@ import profile from "../assets/profile.png";
 import Card from "./Card";
 import Loader from "./Loader";
 import type { CardsProps } from "../types/posts.types";
+import { useState, useEffect } from "react";
+import { getIsBookmarked } from "../api/bookmark.api";
 
 const Cards = ({ posts, loading }: CardsProps) => {
+  const [bookmarkedStatus, setBookmarkedStatus] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    posts?.forEach(async (post) => {
+      const isBookmarked = await getIsBookmarked(post._id);
+      setBookmarkedStatus((prev) => ({
+        ...prev,
+        [post._id]: isBookmarked,
+      }));
+    });
+  }, [posts]);
+
   if (loading) {
     return <Loader />;
   }
@@ -37,7 +51,7 @@ const Cards = ({ posts, loading }: CardsProps) => {
           timeSincePosted={formatDistanceToNow(new Date(post.createdAt), {
             addSuffix: true,
           })}
-          isBookmarked={false}
+          isBookmarked={bookmarkedStatus[post._id]}
         />
       ))}
     </div>
