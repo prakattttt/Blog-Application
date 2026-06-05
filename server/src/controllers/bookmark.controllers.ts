@@ -21,6 +21,21 @@ export const getBookmarkedPosts: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const getIsBookmarked: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+
+    const post = req.params["id"] as string;
+
+    const isBookmarked = await Bookmark.checkBookmark(user, post);
+
+    res.status(200).json({
+      success: true,
+      isBookmarked
+    })
+  },
+);
+
 export const toggleBookMark: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     const user: string = req.user?.id as string;

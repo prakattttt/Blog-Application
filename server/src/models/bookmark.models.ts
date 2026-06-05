@@ -14,6 +14,8 @@ interface IBookmarkModel extends Model<IBookmark> {
   toggleBookmark(author: string, post: string): Promise<boolean>;
 
   getBookmarks(author: string, skip?: number): Promise<IBookmark | null>;
+
+  checkBookmark(author: string, post: string): Promise<boolean>;
 }
 
 const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
@@ -89,6 +91,28 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
         });
 
         return bookmark;
+      },
+
+      async checkBookmark(author: string, post: string) {
+        if (!isValidObjectId(author) || !isValidObjectId(post)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        let bookmark = await this.findOne({ user: author });
+
+        if (!bookmark) {
+          return false;
+        }
+
+        const postId = new Types.ObjectId(post);
+
+        const isBookmarked = bookmark.posts.some((id) => id.equals(postId));
+
+        if (isBookmarked) {
+          return true;
+        }
+        
+        return false;
       },
     },
   },
