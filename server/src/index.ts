@@ -10,6 +10,7 @@ import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import bookmarkRouter from "./routes/bookmark.routes.js";
+import commentRouter from "./routes/comment.routes.js";
 
 import morgan from "morgan"
 
@@ -35,6 +36,8 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
 app.use("/api/bookmarks", bookmarkRouter);
+
+app.use("/api/comments", commentRouter);
 
 app.use(notFoundHandler);
 

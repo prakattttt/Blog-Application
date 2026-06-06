@@ -27,7 +27,7 @@ interface ICommentModel extends Model<IComment> {
   ): Promise<PopulatedComment[]>;
 }
 
-const CommentSchema = new Schema<IComment>(
+const CommentSchema = new Schema<IComment, ICommentModel>(
   {
     text: {
       type: String,
@@ -49,7 +49,7 @@ const CommentSchema = new Schema<IComment>(
   },
   {
     timestamps: true,
-  
+
     statics: {
       async getPostComments(id: string) {
         if (!isValidObjectId(id)) {
@@ -61,9 +61,9 @@ const CommentSchema = new Schema<IComment>(
         const comments = await this.find({ post: postID }).populate(
           "user",
           "name profileImage",
-);
+        );
 
-return comments;
+        return comments;
       },
 
       async addPostComment(user: string, post: string, comment: string) {
@@ -91,4 +91,4 @@ return comments;
   },
 );
 
-export const Comment = model<IComment>("Comment", CommentSchema);
+export const Comment = model<IComment, ICommentModel>("Comment", CommentSchema);
