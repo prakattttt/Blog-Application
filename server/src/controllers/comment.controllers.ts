@@ -49,6 +49,7 @@ export const deleteComment: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       comments,
+      message: "Comment deleted successfully!"
     });
   },
 );
