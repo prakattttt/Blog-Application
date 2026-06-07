@@ -1,6 +1,5 @@
 export interface commentInterface {
   showComments: boolean;
-  profile: string;
   postID: string;
 }
 

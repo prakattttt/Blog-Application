@@ -4,7 +4,7 @@ import Loader from "./Loader";
 
 import type { CommentItem, commentInterface } from "../types/comment.types";
 
-const Comments = ({ showComments, profile, postID }: commentInterface) => {
+const Comments = ({ showComments, postID }: commentInterface) => {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
