@@ -25,6 +25,8 @@ interface ICommentModel extends Model<IComment> {
     post: string,
     comment: string,
   ): Promise<PopulatedComment[]>;
+
+  deletePostComment(user: string, comment: string): Promise<void>;
 }
 
 const CommentSchema = new Schema<IComment, ICommentModel>(
@@ -86,6 +88,24 @@ const CommentSchema = new Schema<IComment, ICommentModel>(
         );
 
         return comments;
+      },
+
+      async deletePostComment(user: string, comment: string) {
+        if (!isValidObjectId(user) || !isValidObjectId(comment)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        const deletedComment = await this.findOneAndDelete({
+          _id: comment,
+          user,
+        });
+
+        if (!deletedComment) {
+          throw new AppError(
+            "Comment not found or you don't have permission to delete it",
+            404,
+          );
+        }
       },
     },
   },

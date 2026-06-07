@@ -37,3 +37,18 @@ export const writeComment: RequestHandler = expressAsyncHandler(
     });
   },
 );
+
+export const deleteComment: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+
+    const comment = req.params["id"] as string;
+
+    const comments = await Comment.deletePostComment(user, comment);
+
+    res.status(200).json({
+      success: true,
+      comments,
+    });
+  },
+);

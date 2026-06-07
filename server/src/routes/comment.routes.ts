@@ -1,5 +1,5 @@
 import express from "express";
-import { getPostComments, writeComment } from "../controllers/comment.controllers.js";
+import { getPostComments, writeComment, deleteComment } from "../controllers/comment.controllers.js";
 
 import type { Router } from "express";
 import authenticateUser from "../middlewares/authenticaton.js";
@@ -8,6 +8,8 @@ const router: Router = express.Router();
 
 router.get("/:id", getPostComments);
 
-router.post("/:id", authenticateUser, writeComment);
+router.post("/write/:id", authenticateUser, writeComment);
+
+router.post("/delete/:id", authenticateUser, deleteComment);
 
 export default router;
