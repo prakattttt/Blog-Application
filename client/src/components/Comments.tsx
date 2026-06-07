@@ -1,31 +1,51 @@
-import { useState } from "react";
-import dummyComments from "../dummy";
+import { useEffect, useState } from "react";
+import { getPostComments } from "../api/comment.api";
+import Loader from "./Loader";
 
-interface commentInterface {
-  showComments: boolean;
-  profile: string;
-}
+import type { CommentItem, commentInterface } from "../types/comment.types";
 
-const Comments = ({ showComments, profile }: commentInterface) => {
-  const [comment, setComment] = useState("");
+const Comments = ({ showComments, profile, postID }: commentInterface) => {
+  const [comments, setComments] = useState<CommentItem[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const fetchedComments = await getPostComments(postID);
+        setComments(fetchedComments);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    run();
+  }, [postID]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <>
       {showComments && (
         <div className="pt-6 pb-8 border-t border-gray-200 animate-[fadeIn_0.2s_ease]">
           <div className="flex flex-col gap-5">
-            {dummyComments.map((item) => (
-              <div key={item.id} className="flex gap-4">
+            {comments.map((item) => (
+              <div key={item._id} className="flex gap-4">
                 <img
-                  src={profile}
+                  src={item.user.profileImage}
                   alt="comment-profile"
                   className="w-11 h-11 rounded-full object-cover"
                 />
 
                 <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1">
-                  <h3 className="font-bold text-sm text-black">{item.name}</h3>
+                  <h3 className="font-bold text-sm text-black">{item.user.name}</h3>
 
                   <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                    {item.comment}
+                    {item.text}
                   </p>
                 </div>
               </div>
@@ -35,8 +55,8 @@ const Comments = ({ showComments, profile }: commentInterface) => {
           <div className="mt-6 flex items-center gap-3">
             <input
               type="text"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
             />

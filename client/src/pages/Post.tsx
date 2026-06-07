@@ -199,7 +199,7 @@ const Post = () => {
                 )}
               </button>
             </div>
-            <Comments showComments={showComments} profile={profile} />
+            <Comments showComments={showComments} profile={profile} postID={id ?? ""} />
           </div>
         </div>
 
