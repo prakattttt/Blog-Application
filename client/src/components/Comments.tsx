@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPostComments } from "../api/comment.api";
+import { addPostComments, getPostComments } from "../api/comment.api";
 import Loader from "./Loader";
 
 import type { CommentItem, commentInterface } from "../types/comment.types";
@@ -8,6 +8,7 @@ const Comments = ({ showComments, postID }: commentInterface) => {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const run = async () => {
@@ -22,7 +23,15 @@ const Comments = ({ showComments, postID }: commentInterface) => {
     };
 
     run();
-  }, [postID]);
+  }, [postID, refresh]);
+
+  const handleComment = async () => {
+    await addPostComments(postID, newComment);
+
+    setNewComment("");
+
+    setRefresh((prev) => !prev);
+  };
 
   if (loading) {
     return <Loader />;
@@ -42,7 +51,9 @@ const Comments = ({ showComments, postID }: commentInterface) => {
                 />
 
                 <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1">
-                  <h3 className="font-bold text-sm text-black">{item.user.name}</h3>
+                  <h3 className="font-bold text-sm text-black">
+                    {item.user.name}
+                  </h3>
 
                   <p className="text-sm text-gray-600 mt-1 leading-relaxed">
                     {item.text}
@@ -61,7 +72,10 @@ const Comments = ({ showComments, postID }: commentInterface) => {
               className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
             />
 
-            <button className="px-5 py-3 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition">
+            <button
+              className="px-5 py-3 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition"
+              onClick={handleComment}
+            >
               Post
             </button>
           </div>
