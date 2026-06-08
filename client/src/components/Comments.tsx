@@ -8,7 +8,6 @@ const Comments = ({ showComments, postID }: commentInterface) => {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const run = async () => {
@@ -23,14 +22,20 @@ const Comments = ({ showComments, postID }: commentInterface) => {
     };
 
     run();
-  }, [postID, refresh]);
+  }, [postID]);
 
   const handleComment = async () => {
-    await addPostComments(postID, newComment);
+    if (!newComment.trim()) return;
 
-    setNewComment("");
+    try {
+      const createdComment = await addPostComments(postID, newComment);
 
-    setRefresh((prev) => !prev);
+      setComments(createdComment);
+
+      setNewComment("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (loading) {
