@@ -36,20 +36,16 @@ const Post = () => {
       try {
         if (!id) return;
 
-        const [data, bookmark] = await Promise.all([
-          getSinglePost(id),
-          getBookmarkedPosts(),
-        ]);
+        const data = await getSinglePost(id);
+
+        if (user) {
+          const bookmark = await getBookmarkedPosts();
+          setIsBookmarked(
+            bookmark?.posts.some((post: PostCard) => post._id === id),
+          );
+        }
 
         setPost(data);
-
-        if (id) {
-          if (id) {
-            setIsBookmarked(
-              bookmark.posts.some((post: PostCard) => post._id === id),
-            );
-          }
-        }
 
         if (user?._id) {
           setIsLiked(data.likes.includes(user._id));
