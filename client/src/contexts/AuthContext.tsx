@@ -14,7 +14,7 @@ export const AuthContext = createContext<AuthInterface>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserInterface | null>(null);
 
   useEffect(() => {
