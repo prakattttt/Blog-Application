@@ -7,10 +7,12 @@ import cloudinary from "../utils/Cloudinary.js";
 import type { AuthRequest } from "../middlewares/authenticaton.js";
 
 export const getAllPosts: RequestHandler = expressAsyncHandler(
-  async (req, res) => {
+  async (req: AuthRequest, res) => {
     const skip: number = Number(req.query["skip"]) || 0;
 
-    const posts = await Post.getPosts(skip);
+    const userId: string = req.user?.id || "";
+
+    const posts = await Post.getPosts(skip, userId);
 
     const postNo: number = await Post.countDocuments();
 

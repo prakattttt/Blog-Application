@@ -1,3 +1,4 @@
+import { Bookmark } from "./bookmark.models.js";
 import { model, Schema, type Model, Types, isValidObjectId } from "mongoose";
 import AppError from "../utils/AppError.js";
 
@@ -26,7 +27,7 @@ interface PostBody {
 interface IPostModel extends Model<IPost> {
   createPost(post: PostBody): Promise<{ postId: string; creatorId: string }>;
 
-  getPosts(skip: number): Promise<IPost[]>;
+  getPosts(skip: number, userId: string): Promise<IPost[]>;
 
   getSinglePost(id: string): Promise<IPost>;
 
@@ -93,12 +94,33 @@ const PostSchema = new Schema<IPost, IPostModel>(
         };
       },
 
-      async getPosts(skip: number) {
-        return this.find()
+      async getPosts(skip: number, userId?: string) {
+        const posts = await this.find()
           .populate("author", "name profileImage")
           .limit(12)
           .skip(skip * 12)
-          .sort({ createdAt: -1 });
+          .sort({ createdAt: -1 })
+          .lean();
+
+        if (!userId) {
+          return posts.map((post) => ({
+            ...post,
+            isBookmarked: false,
+          }));
+        }
+
+        const bookmark = await Bookmark.findOne({ user: userId })
+          .select("posts")
+          .lean();
+
+        const bookmarkedPosts = new Set(
+          bookmark?.posts.map((id) => id.toString()) || [],
+        );
+
+        return posts.map((post) => ({
+          ...post,
+          isBookmarked: bookmarkedPosts.has(post._id.toString()),
+        }));
       },
 
       async getSinglePost(id: string) {
