@@ -4,10 +4,11 @@ import { getAllPosts, getPosts, getSinglePost, createPost, deletePost, toggleLik
 import type { Router } from "express";
 import upload from "../middlewares/multer.js";
 import authenticateUser from "../middlewares/authenticaton.js";
+import optionalAuth from "../middlewares/optionalAuth.js";
 
 const router: Router = express.Router();
 
-router.get("/", getAllPosts);
+router.get("/", optionalAuth, getAllPosts);
 
 router.get("/me", authenticateUser, getPosts);
 
