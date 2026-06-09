@@ -2,6 +2,9 @@ import type { CardType } from "../types/card.types";
 import { FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import React, { useState } from "react";
+import { toggleBookmark } from "../api/bookmark.api";
+import useAuth from "../hooks/useAuth";
 
 const Card = ({
   id,
@@ -15,7 +18,27 @@ const Card = ({
   isBookmarked,
   profileImg,
 }: CardType) => {
+  const { isLoggedIn } = useAuth();
+
   const navigate = useNavigate();
+
+  const [bookmarked, setBookmarked] = useState(isBookmarked);
+
+  const handleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (!isLoggedIn) {
+      return;
+    }
+    
+    try {
+      const bookmarked = (await toggleBookmark(id)) as boolean;
+
+      setBookmarked(bookmarked);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -85,12 +108,12 @@ const Card = ({
           </div>
 
           <button
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleBookmark}
             className={`transition ${
-              isBookmarked ? "text-black" : "text-gray-400 hover:text-black"
+              bookmarked ? "text-black" : "text-gray-400"
             }`}
           >
-            <FaBookmark />
+            <FaBookmark size={20} />
           </button>
         </div>
       </div>
