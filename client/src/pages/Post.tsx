@@ -19,10 +19,11 @@ import ReactMarkdown from "react-markdown";
 
 import Comments from "../components/Comments";
 import { getBookmarkedPosts, toggleBookmark } from "../api/bookmark.api";
+import toast from "react-hot-toast";
 
 const Post = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const [post, setPost] = useState<PostCard | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,6 +92,11 @@ const Post = () => {
 
   const handleBookmark = async () => {
     if (!id || !post) return;
+
+    if (!isLoggedIn) {
+      toast.error("Please login to bookmark the post!");
+      return;
+    }
 
     try {
       const bookmarked = (await toggleBookmark(id)) as boolean;
