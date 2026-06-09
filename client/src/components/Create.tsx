@@ -1,13 +1,10 @@
 import CreateForm from "./CreateForm";
 import useWrite from "../hooks/useWrite";
 import useAuth from "../hooks/useAuth";
-import { FiArrowLeft, FiLogIn } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import AskLoginPopup from "./AskLoginPopup";
 
 const Create = () => {
   const { toggle } = useWrite();
-
-  const navigate = useNavigate();
 
   const { isLoggedIn } = useAuth();
 
@@ -32,23 +29,7 @@ const Create = () => {
               <CreateForm handleClick={toggle} />
             </>
           ) : (
-            <div>
-              <p className="text-gray-500 mt-2 text-sm md:text-base mb-5">
-                Please login to create a blog post.
-              </p>
-
-              <div className="flex items-center gap-3">
-                <button className="btn-2 flex items-center justify-center gap-1" onClick={toggle}>
-                  <FiArrowLeft className="text-[18px]" />
-                  <span>Back</span>
-                </button>
-
-                <button className="btn-1 flex items-center justify-center gap-2" onClick={() => navigate("/login")}>
-                  <FiLogIn className="text-[18px]" />
-                  <span>Login</span>
-                </button>
-              </div>
-            </div>
+          <AskLoginPopup toggle={toggle}/>
           )}
         </div>
       </div>
