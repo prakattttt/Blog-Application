@@ -40,7 +40,7 @@ const Cards = ({ posts, loading }: CardsProps) => {
           timeSincePosted={formatDistanceToNow(new Date(post.createdAt), {
             addSuffix: true,
           })}
-          isBookmarked={false}
+          isBookmarked={post.isBookmarked}
         />
       ))}
     </div>

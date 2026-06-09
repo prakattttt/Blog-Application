@@ -13,6 +13,8 @@ export interface PostCard {
 
   createdAt: string;
 
+  isBookmarked: boolean
+
   author: {
     _id: string;
     name: string;
