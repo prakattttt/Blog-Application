@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { addPostComments, getPostComments } from "../api/comment.api";
+import { FaRegCommentDots } from "react-icons/fa";
 import Loader from "./Loader";
+import toast from "react-hot-toast";
 
 import type { CommentItem, commentInterface } from "../types/comment.types";
+import useAuth from "../hooks/useAuth";
 
 const Comments = ({ showComments, postID }: commentInterface) => {
+  const { isLoggedIn } = useAuth();
+
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
@@ -27,6 +32,10 @@ const Comments = ({ showComments, postID }: commentInterface) => {
   const handleComment = async () => {
     if (!newComment.trim()) return;
 
+    if (!isLoggedIn) {
+      toast.error("Please login to add a comment!");
+      setNewComment("");
+    }
     try {
       const createdComment = await addPostComments(postID, newComment);
 
@@ -40,6 +49,42 @@ const Comments = ({ showComments, postID }: commentInterface) => {
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (comments.length === 0 && showComments) {
+    return (
+      <div className="p-4 border-t border-gray-200 animate-[fadeIn_0.2s_ease]">
+        <div className="flex flex-col items-center justify-center py-5 text-center">
+          <div className="w-13 h-13 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+            <FaRegCommentDots className="text-2xl text-gray-400" />
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-800">
+            No comments yet
+          </h3>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Be the first to share your thoughts.
+          </p>
+        </div>
+        <div className="mt-6 flex items-center gap-3">
+          <input
+            type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
+          />
+
+          <button
+            className="px-5 py-3 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition"
+            onClick={handleComment}
+          >
+            Post
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
