@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Content } from "../types/content.types";
 import Pagination from "@mui/material/Pagination";
 import Cards from "./Cards";
-import { getAllPosts, getAuthorPosts } from "../api/post.api";
+import { getAllPosts, getAuthorPosts, getTrendingPosts } from "../api/post.api";
 import type { GetPostData } from "../types/posts.types";
 import useWrite from "../hooks/useWrite";
 import { getBookmarkedPosts } from "../api/bookmark.api";
@@ -33,6 +33,9 @@ const MainSection = ({ type, header, description }: Content) => {
             break;
           case "bookmarks":
             response = await getBookmarkedPosts(page - 1);
+            break;
+          case "trending":
+            response = await getTrendingPosts(page - 1);
             break;
           default:
             response = await getAllPosts(page - 1);

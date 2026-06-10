@@ -8,6 +8,14 @@ export const getAllPosts = async (page: number = 0) => {
   }
 };
 
+export const getTrendingPosts = async (page: number = 0) => {
+  const response = await api.get(`/posts/trending?skip=${page}`);
+
+  if (response.data.success) {
+    return response.data;
+  }
+};
+
 export const getAuthorPosts = async (page: number = 0) => {
   const response = await api.get(`/posts/me?skip=${page}`);
 
