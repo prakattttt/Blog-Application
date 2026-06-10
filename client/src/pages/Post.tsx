@@ -18,7 +18,7 @@ import { toggleLike } from "../api/post.api";
 import ReactMarkdown from "react-markdown";
 
 import Comments from "../components/Comments";
-import { getBookmarkedPosts, toggleBookmark } from "../api/bookmark.api";
+import { getIsBookmarked, toggleBookmark } from "../api/bookmark.api";
 import toast from "react-hot-toast";
 
 const Post = () => {
@@ -40,10 +40,8 @@ const Post = () => {
         const data = await getSinglePost(id);
 
         if (user) {
-          const bookmark = await getBookmarkedPosts();
-          setIsBookmarked(
-            bookmark?.posts.some((post: PostCard) => post._id === id),
-          );
+          const bookmark = await getIsBookmarked(id);
+          setIsBookmarked(bookmark);
         }
 
         setPost(data);
