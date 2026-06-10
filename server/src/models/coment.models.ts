@@ -1,5 +1,6 @@
 import { isValidObjectId, Model, model, Schema, Types } from "mongoose";
 import AppError from "../utils/AppError.js";
+import { Post } from "./post.models.js";
 
 interface IComment {
   text: string;
@@ -86,6 +87,14 @@ const CommentSchema = new Schema<IComment, ICommentModel>(
           "user",
           "name profileImage",
         );
+
+        const posts = await Post.findById(postID);
+        
+        if(!posts) throw new AppError("Unable to fetch posts!", 400);
+
+        posts.commentsCount++;
+
+        await posts.save();
 
         return comments;
       },
