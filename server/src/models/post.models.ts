@@ -17,6 +17,10 @@ interface IPost {
   updatedAt?: Date;
 }
 
+interface ReturnedPosts extends IPost {
+  isBookmarked: boolean;
+}
+
 interface PostBody {
   title: string;
   description: string;
@@ -27,11 +31,11 @@ interface PostBody {
 interface IPostModel extends Model<IPost> {
   createPost(post: PostBody): Promise<{ postId: string; creatorId: string }>;
 
-  getPosts(skip: number, userId: string): Promise<IPost[]>;
+  getPosts(skip: number, userId: string): Promise<ReturnedPosts[]>;
 
   getSinglePost(id: string): Promise<IPost>;
 
-  getPostsByAuthor(id: string, skip: number): Promise<IPost[]>;
+  getPostsByAuthor(id: string, skip: number): Promise<ReturnedPosts[]>;
 
   toggleLike(author: string, postId: string): Promise<boolean>;
 
@@ -136,11 +140,32 @@ const PostSchema = new Schema<IPost, IPostModel>(
           throw new AppError("Invalid ID!", 400);
         }
 
-        return this.find({ author: id })
+        const posts = await this.find({ author: id })
           .populate("author", "name profileImage")
           .limit(12)
           .skip(skip * 12)
-          .sort({ createdAt: -1 });
+          .sort({ createdAt: -1 })
+          .lean();
+
+        if (!id) {
+          return posts.map((post) => ({
+            ...post,
+            isBookmarked: false,
+          }));
+        }
+
+        const bookmark = await Bookmark.findOne({ user: id })
+          .select("posts")
+          .lean();
+
+        const bookmarkedPosts = new Set(
+          bookmark?.posts.map((id) => id.toString()) || [],
+        );
+
+        return posts.map((post) => ({
+          ...post,
+          isBookmarked: bookmarkedPosts.has(post._id.toString()),
+        }));
       },
 
       async toggleLike(author: string, postId: string) {
