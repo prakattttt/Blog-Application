@@ -44,6 +44,31 @@ interface IPostModel extends Model<IPost> {
   deletePost(id: string): Promise<void>;
 }
 
+const attachBookmarks = async (
+  posts: any[],
+  userId?: string,
+): Promise<ReturnedPosts[]> => {
+  if (!userId) {
+    return posts.map((post) => ({
+      ...post,
+      isBookmarked: false,
+    }));
+  }
+
+  const bookmark = await Bookmark.findOne({ user: userId })
+    .select("posts")
+    .lean();
+
+  const bookmarkedPosts = new Set(
+    bookmark?.posts.map((id) => id.toString()) || [],
+  );
+
+  return posts.map((post) => ({
+    ...post,
+    isBookmarked: bookmarkedPosts.has(post._id.toString()),
+  }));
+};
+
 const PostSchema = new Schema<IPost, IPostModel>(
   {
     title: {
@@ -108,25 +133,7 @@ const PostSchema = new Schema<IPost, IPostModel>(
           .sort({ createdAt: -1 })
           .lean();
 
-        if (!userId) {
-          return posts.map((post) => ({
-            ...post,
-            isBookmarked: false,
-          }));
-        }
-
-        const bookmark = await Bookmark.findOne({ user: userId })
-          .select("posts")
-          .lean();
-
-        const bookmarkedPosts = new Set(
-          bookmark?.posts.map((id) => id.toString()) || [],
-        );
-
-        return posts.map((post) => ({
-          ...post,
-          isBookmarked: bookmarkedPosts.has(post._id.toString()),
-        }));
+        return attachBookmarks(posts, userId);
       },
 
       async getTrendingPosts(skip: number, userId?: string) {
@@ -174,25 +181,7 @@ const PostSchema = new Schema<IPost, IPostModel>(
           },
         ]);
 
-        if (!userId) {
-          return posts.map((post) => ({
-            ...post,
-            isBookmarked: false,
-          }));
-        }
-
-        const bookmark = await Bookmark.findOne({ user: userId })
-          .select("posts")
-          .lean();
-
-        const bookmarkedPosts = new Set(
-          bookmark?.posts.map((id) => id.toString()) || [],
-        );
-
-        return posts.map((post) => ({
-          ...post,
-          isBookmarked: bookmarkedPosts.has(post._id.toString()),
-        }));
+        return attachBookmarks(posts, userId);
       },
 
       async getSinglePost(id: string) {
@@ -215,25 +204,7 @@ const PostSchema = new Schema<IPost, IPostModel>(
           .sort({ createdAt: -1 })
           .lean();
 
-        if (!id) {
-          return posts.map((post) => ({
-            ...post,
-            isBookmarked: false,
-          }));
-        }
-
-        const bookmark = await Bookmark.findOne({ user: id })
-          .select("posts")
-          .lean();
-
-        const bookmarkedPosts = new Set(
-          bookmark?.posts.map((id) => id.toString()) || [],
-        );
-
-        return posts.map((post) => ({
-          ...post,
-          isBookmarked: bookmarkedPosts.has(post._id.toString()),
-        }));
+        return attachBookmarks(posts, id);
       },
 
       async toggleLike(author: string, postId: string) {
