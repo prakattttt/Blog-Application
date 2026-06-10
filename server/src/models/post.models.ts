@@ -33,6 +33,8 @@ interface IPostModel extends Model<IPost> {
 
   getPosts(skip: number, userId: string): Promise<ReturnedPosts[]>;
 
+  getTrendingPosts(skip: number, userId: string): Promise<ReturnedPosts[]>;
+
   getSinglePost(id: string): Promise<IPost>;
 
   getPostsByAuthor(id: string, skip: number): Promise<ReturnedPosts[]>;
@@ -105,6 +107,72 @@ const PostSchema = new Schema<IPost, IPostModel>(
           .skip(skip * 12)
           .sort({ createdAt: -1 })
           .lean();
+
+        if (!userId) {
+          return posts.map((post) => ({
+            ...post,
+            isBookmarked: false,
+          }));
+        }
+
+        const bookmark = await Bookmark.findOne({ user: userId })
+          .select("posts")
+          .lean();
+
+        const bookmarkedPosts = new Set(
+          bookmark?.posts.map((id) => id.toString()) || [],
+        );
+
+        return posts.map((post) => ({
+          ...post,
+          isBookmarked: bookmarkedPosts.has(post._id.toString()),
+        }));
+      },
+
+      async getTrendingPosts(skip: number, userId?: string) {
+        if (!isValidObjectId(userId)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        const posts = await this.aggregate([
+          {
+            $addFields: {
+              engagement: {
+                $add: [{ $size: "$likes" }, "$commentsCount"],
+              },
+            },
+          },
+          {
+            $sort: {
+              engagement: -1,
+            },
+          },
+          {
+            $skip: skip * 12,
+          },
+          {
+            $limit: 12,
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "author",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    name: 1,
+                    profileImage: 1,
+                  },
+                },
+              ],
+              as: "author",
+            },
+          },
+          {
+            $unwind: "$author",
+          },
+        ]);
 
         if (!userId) {
           return posts.map((post) => ({
