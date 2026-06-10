@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import type { CommentItem, commentInterface } from "../types/comment.types";
 import useAuth from "../hooks/useAuth";
 
-const Comments = ({ showComments, postID }: commentInterface) => {
+const Comments = ({ showComments, postID, onCommentAdded }: commentInterface) => {
   const { isLoggedIn } = useAuth();
 
   const [comments, setComments] = useState<CommentItem[]>([]);
@@ -38,6 +38,8 @@ const Comments = ({ showComments, postID }: commentInterface) => {
     }
     try {
       const createdComment = await addPostComments(postID, newComment);
+
+      onCommentAdded();
 
       setComments(createdComment);
 

@@ -201,7 +201,17 @@ const Post = () => {
                 )}
               </button>
             </div>
-            <Comments showComments={showComments} postID={id ?? ""} />
+            <Comments
+              showComments={showComments}
+              postID={id ?? ""}
+              onCommentAdded={() =>
+                setPost((prev) =>
+                  prev
+                    ? { ...prev, commentsCount: prev.commentsCount + 1 }
+                    : prev,
+                )
+              }
+            />
           </div>
         </div>
 
