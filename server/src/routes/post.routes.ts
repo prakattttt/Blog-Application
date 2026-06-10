@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllPosts, getPosts, getSinglePost, createPost, deletePost, toggleLike } from "../controllers/post.controllers.js";
+import { getAllPosts, getPosts, getSinglePost, createPost, deletePost, toggleLike, getTrendingPosts } from "../controllers/post.controllers.js";
 
 import type { Router } from "express";
 import upload from "../middlewares/multer.js";
@@ -9,6 +9,8 @@ import optionalAuth from "../middlewares/optionalAuth.js";
 const router: Router = express.Router();
 
 router.get("/", optionalAuth, getAllPosts);
+
+router.get("/trending", optionalAuth, getTrendingPosts);
 
 router.get("/me", authenticateUser, getPosts);
 

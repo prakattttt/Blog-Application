@@ -24,6 +24,24 @@ export const getAllPosts: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const getTrendingPosts: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const skip: number = Number(req.query["skip"]) || 0;
+
+    const userId: string = req.user?.id || "";
+
+    const posts = await Post.getTrendingPosts(skip, userId);
+
+    const postNo: number = await Post.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      posts,
+      totalPages: Math.ceil(postNo / 12),
+    });
+  },
+);
+
 export const getPosts: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     const id: string = req.user?.id as string;
