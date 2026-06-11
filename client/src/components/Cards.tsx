@@ -3,8 +3,6 @@ import profile from "../assets/profile.png";
 import Card from "./Card";
 import Loader from "./Loader";
 import type { CardsProps } from "../types/posts.types";
-// import { useState, useEffect } from "react";
-// import { getIsBookmarked } from "../api/bookmark.api";
 
 const Cards = ({ posts, loading }: CardsProps) => {
 
