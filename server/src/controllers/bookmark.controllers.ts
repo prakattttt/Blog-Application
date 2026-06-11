@@ -11,11 +11,11 @@ export const getBookmarkedPosts: RequestHandler = expressAsyncHandler(
 
     const bookmarks = await Bookmark.getBookmarks(user, skip);
 
-    const totalPosts = bookmarks?.posts.length ?? 0;
+    const totalPosts = bookmarks.length;
 
     res.status(200).json({
       success: true,
-      posts: bookmarks?.posts ?? [],
+      posts: bookmarks,
       totalPages: Math.ceil(totalPosts / 12),
     });
   },
@@ -32,7 +32,7 @@ export const getIsBookmarked: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       isBookmarked
-    })
+    });
   },
 );
 

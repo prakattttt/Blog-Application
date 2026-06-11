@@ -17,7 +17,7 @@ interface IPost {
   updatedAt?: Date;
 }
 
-interface ReturnedPosts extends IPost {
+export interface ReturnedPosts extends IPost {
   isBookmarked: boolean;
 }
 

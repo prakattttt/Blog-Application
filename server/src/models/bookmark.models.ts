@@ -1,5 +1,6 @@
 import { isValidObjectId, Model, model, Schema, Types } from "mongoose";
 import AppError from "../utils/AppError.js";
+import type { ReturnedPosts } from "./post.models.js";
 
 interface IBookmark {
   user: Types.ObjectId;
@@ -13,7 +14,7 @@ interface IBookmark {
 interface IBookmarkModel extends Model<IBookmark> {
   toggleBookmark(author: string, post: string): Promise<boolean>;
 
-  getBookmarks(author: string, skip?: number): Promise<IBookmark | null>;
+  getBookmarks(author: string, skip?: number): Promise<ReturnedPosts[]>;
 
   checkBookmark(author: string, post: string): Promise<boolean>;
 }
@@ -76,21 +77,28 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
           throw new AppError("Invalid ID!", 400);
         }
 
-        const bookmark = await this.findOne({ user: author }).populate({
-          path: "posts",
-          populate: {
-            path: "author",
-          },
-          options: {
-            skip,
-            limit: 12,
-            sort: {
-              createdAt: -1,
+        const bookmark = await this.findOne({ user: author })
+          .populate({
+            path: "posts",
+            populate: {
+              path: "author",
             },
-          },
-        });
+            options: {
+              skip,
+              limit: 12,
+              sort: {
+                createdAt: -1,
+              },
+            },
+          })
+          .lean();
 
-        return bookmark;
+        if (!bookmark) return [];
+
+        return bookmark.posts.map((post: any) => ({
+          ...post,
+          isBookmarked: true,
+        }));
       },
 
       async checkBookmark(author: string, post: string) {
@@ -111,7 +119,7 @@ const BookmarkSchema = new Schema<IBookmark, IBookmarkModel>(
         if (isBookmarked) {
           return true;
         }
-        
+
         return false;
       },
     },
