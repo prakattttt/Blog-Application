@@ -12,6 +12,12 @@ import Loader from "./components/Loader";
 import useAuth from "./hooks/useAuth";
 import UserInfo from "./pages/UserInfo";
 import Post from "./pages/Post";
+import AccountSettings from "./pages/AccountSettings";
+import ChangeName from "./pages/ChangeName";
+import ChangePassword from "./pages/ChangePassword";
+import ChangeBio from "./pages/ChangeBio";
+import ChangeProfileImage from "./pages/ChangeProfile";
+import DeleteAccount from "./pages/DeleteAccount";
 import ScrollToTop from "./components/scrollToTop";
 
 function App() {
@@ -48,6 +54,13 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/settings" element={<AccountSettings />}>
+            <Route path="name" element={<ChangeName />} />
+            <Route path="password" element={<ChangePassword />} />
+            <Route path="bio" element={<ChangeBio />} />
+            <Route path="profile-image" element={<ChangeProfileImage />} />
+            <Route path="delete-account" element={<DeleteAccount />} />
+          </Route>
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
