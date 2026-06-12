@@ -118,7 +118,7 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
       throw new AppError("No image uploaded!", 400);
     }
 
-    if(!id) {
+    if (!id) {
       throw new AppError("User ID now found!!", 400);
     }
 
@@ -151,6 +151,25 @@ export const logoutUser: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       message: "User logged out successfully!",
+    });
+  },
+);
+
+export const deleteUser: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: env !== "development",
+      sameSite: "lax",
+    });
+
+    await User.deleteUser(user);
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully!",
     });
   },
 );

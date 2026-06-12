@@ -5,15 +5,18 @@ import bcrypt from "bcryptjs";
 
 import type { Types } from "mongoose";
 
+import { Bookmark } from "./bookmark.models.js";
+
 interface IUser {
   _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
   bio?: string;
-  profileImage?: string
+  profileImage?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date | null;
 }
 
 interface IUserModel extends Model<IUser> {
@@ -32,10 +35,9 @@ interface IUserModel extends Model<IUser> {
     password: string,
   ): Promise<{ success: boolean; id: string }>;
 
-  setBio(
-    id: string,
-    bio: string
-  ) : Promise<void>
+  setBio(id: string, bio: string): Promise<void>;
+
+  deleteUser(id: string): Promise<void>;
 }
 
 const UserSchema = new Schema<IUser, IUserModel>(
@@ -83,8 +85,13 @@ const UserSchema = new Schema<IUser, IUserModel>(
 
     profileImage: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
+
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -122,6 +129,10 @@ const UserSchema = new Schema<IUser, IUserModel>(
       async loginUser(email: string, password: string) {
         const user = await this.findOne({ email }).select("+password");
 
+        if (user?.deletedAt) {
+          throw new AppError("This account has been deleted", 403);
+        }
+
         if (!user) {
           throw new AppError(`Cannot find the user with email ${email}`, 400);
         }
@@ -139,16 +150,34 @@ const UserSchema = new Schema<IUser, IUserModel>(
       },
 
       async setBio(id: string, bio: string) {
-        if(!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+        if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
 
         const user = await this.findById(id);
-         
-        if(!user) throw new AppError("User not found!", 400)
+
+        if (!user) throw new AppError("User not found!", 400);
 
         user.bio = bio;
 
         await user.save();
-      }
+      },
+
+      async deleteUser(id: string) {
+        if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+
+        const user = await this.findById(id);
+
+        if (!user) throw new AppError("User not found!", 400);
+
+        await this.findByIdAndUpdate(id, {
+          name: "Deleted User",
+          email: `deleted_${id}@deleted.local`,
+          bio: "",
+          profileImage: "",
+          deletedAt: new Date(),
+        });
+
+        await Bookmark.deleteMany({ user: id });
+      },
     },
   },
 );
