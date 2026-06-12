@@ -1,13 +1,20 @@
 import { FaUser, FaLock, FaImage, FaTrash, FaInfoCircle } from "react-icons/fa";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Navigate } from "react-router-dom";
 import SettingItem from "../components/SettingItem";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import useAuth from "../hooks/useAuth";
 
 const AccountSettings = () => {
+  const { isLoggedIn } = useAuth();
+
   const location = useLocation();
 
   const isRoot = location.pathname === "/settings";
+
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
   if (!isRoot) {
     return <Outlet />;
