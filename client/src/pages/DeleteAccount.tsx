@@ -2,14 +2,28 @@ import toast from "react-hot-toast";
 import { deleteUser } from "../api/user.api";
 import SettingsPage from "../layouts/SettingsLayout";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { isAxiosError } from "axios";
 
 const DeleteAccount = () => {
+  const [password, setPassword] = useState<string>("");
+
   const navigate = useNavigate();
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
+  };
+
   const handleDeletion = async () => {
-    const message = await deleteUser();
-    navigate("/login");
-    toast.success(message);
+    try {
+      const message = await deleteUser(password);
+      navigate("/login");
+      toast.success(message);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    }
   };
 
   return (
@@ -28,6 +42,8 @@ const DeleteAccount = () => {
 
       <input
         type="password"
+        value={password}
+        onChange={handleChange}
         placeholder="Enter your password"
         className="input"
       />
