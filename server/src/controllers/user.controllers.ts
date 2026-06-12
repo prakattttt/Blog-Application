@@ -124,7 +124,7 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
 
     const result = await cloudinary.uploader.upload(file.path, {
       folder: "blog-users",
-      resource_type: "image"
+      resource_type: "image",
     });
 
     await User.findByIdAndUpdate(id, {
@@ -159,13 +159,15 @@ export const deleteUser: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     const user = req.user?.id as string;
 
+    const { password } = req.body;
+
+    await User.deleteUser(user, password);
+
     res.clearCookie("token", {
       httpOnly: true,
       secure: env !== "development",
       sameSite: "lax",
     });
-
-    await User.deleteUser(user);
 
     res.status(200).json({
       success: true,
