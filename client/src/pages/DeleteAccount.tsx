@@ -1,6 +1,17 @@
+import toast from "react-hot-toast";
+import { deleteUser } from "../api/user.api";
 import SettingsPage from "../layouts/SettingsLayout";
+import { useNavigate } from "react-router-dom";
 
 const DeleteAccount = () => {
+  const navigate = useNavigate();
+
+  const handleDeletion = async () => {
+    const message = await deleteUser();
+    navigate("/login");
+    toast.success(message);
+  };
+
   return (
     <SettingsPage
       title="Delete Account"
@@ -21,7 +32,10 @@ const DeleteAccount = () => {
         className="input"
       />
 
-      <button className="mt-5 w-full py-3 rounded-2xl bg-red-600 text-white font-semibold hover:bg-red-700">
+      <button
+        className="mt-5 w-full py-3 rounded-2xl bg-red-600 text-white font-semibold hover:bg-red-700"
+        onClick={handleDeletion}
+      >
         Delete My Account
       </button>
     </SettingsPage>
