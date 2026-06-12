@@ -19,6 +19,6 @@ router.post("/set-profileImage/:id", upload.single("profileImage"), uploadProfil
 
 router.post("/logout", logoutUser);
 
-router.post("/delete", authenticateUser, deleteUser);
+router.delete("/delete", authenticateUser, deleteUser);
 
 export default router;
