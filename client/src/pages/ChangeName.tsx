@@ -24,7 +24,7 @@ const ChangeName = () => {
 
   return (
     <>
-      {showConfirm ? <ConfirmChange setShowConfirm={setShowConfirm} name={name} /> : null}
+      {showConfirm ? <ConfirmChange setShowConfirm={setShowConfirm} text={name} change={"name"} /> : null}
       <SettingsPage
         title="Change Name"
         description="Update the name displayed on your profile."

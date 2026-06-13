@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
-import { verifyPassword } from "../api/auth.api";
+import { setBio, verifyPassword } from "../api/auth.api";
 import toast from "react-hot-toast";
 import { changeName } from "../api/user.api";
 import useAuth from "../hooks/useAuth";
@@ -9,11 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 type Props = {
   setShowConfirm: React.Dispatch<React.SetStateAction<boolean>>;
-  name: string;
+  text: string;
+  change: "bio" | "name";
 };
 
-const ConfirmChange = ({ setShowConfirm, name }: Props) => {
-  const { setUser } = useAuth();
+const ConfirmChange = ({ setShowConfirm, text, change }: Props) => {
+  const { user } = useAuth();
+
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -32,12 +34,18 @@ const ConfirmChange = ({ setShowConfirm, name }: Props) => {
         return;
       }
 
-      const message = await changeName(name);
+      let message = "";
 
-      setUser((prev: any) => ({
-        ...prev,
-        name: name,
-      }));
+      if (change === "name") {
+        message = await changeName(text);
+      } else {
+        if (!user?._id) {
+          toast.error("User not found.");
+          return;
+        }
+
+        message = await setBio({ id: user._id, bio: text });
+      }
 
       navigate("/settings");
 
@@ -45,6 +53,7 @@ const ConfirmChange = ({ setShowConfirm, name }: Props) => {
     } catch (error: any) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data?.message);
+        return;
       }
 
       toast.error(error.message || "Something went wrong");

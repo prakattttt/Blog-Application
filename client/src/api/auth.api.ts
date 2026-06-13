@@ -38,7 +38,7 @@ export const setBio = async ({ id, bio }: { id: string; bio: string }) => {
     bio,
   });
 
-  return response.data;
+  return response.data.message;
 };
 
 export const uploadProfileImage = async (image: File, id: string) => {
