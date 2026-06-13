@@ -7,6 +7,14 @@ export const loginUser = async (body: LoginBody) => {
   return response.data;
 };
 
+export const verifyPassword = async (password: string) => {
+  const response = await api.post("/users/verify", {
+    password
+  });
+
+  return response.data.isMatched;
+};
+
 export const registerUser = async (body: RegisterBody) => {
   const response = await api.post("/users/register", body);
 
