@@ -13,7 +13,7 @@ const AccountSettings = () => {
   const isRoot = location.pathname === "/settings";
 
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (!isRoot) {
