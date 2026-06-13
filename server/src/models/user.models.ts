@@ -35,9 +35,11 @@ interface IUserModel extends Model<IUser> {
     password: string,
   ): Promise<{ success: boolean; id: string }>;
 
+  verifyPassword(id: string, password: string): Promise<boolean>;
+
   setBio(id: string, bio: string): Promise<void>;
 
-  deleteUser(id: string, password: string): Promise<void>;
+  deleteUser(id: string): Promise<void>;
 }
 
 const UserSchema = new Schema<IUser, IUserModel>(
@@ -149,6 +151,18 @@ const UserSchema = new Schema<IUser, IUserModel>(
         };
       },
 
+      async verifyPassword(id: string, password: string) {
+        if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+
+        const user = await this.findById(id).select("+password");
+
+        if (!user) throw new AppError("User not found!", 400);
+
+        const isMatched = await bcrypt.compare(password, user.password);
+
+        return isMatched;
+      },
+
       async setBio(id: string, bio: string) {
         if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
 
@@ -161,18 +175,12 @@ const UserSchema = new Schema<IUser, IUserModel>(
         await user.save();
       },
 
-      async deleteUser(id: string, password: string) {
+      async deleteUser(id: string) {
         if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
 
-        const user = await this.findById(id).select("+password");
+        const user = await this.findById(id);
 
         if (!user) throw new AppError("User not found!", 400);
-
-        const isMatched = await bcrypt.compare(password, user.password);
-
-        if (!isMatched) {
-          throw new AppError(`Invalid password. Please try again!`, 401);
-        }
 
         await this.findByIdAndUpdate(id, {
           name: "Deleted User",

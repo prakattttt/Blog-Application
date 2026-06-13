@@ -108,6 +108,21 @@ export const loginUser: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const verifyPassword: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const id = req.user?.id as string;
+
+    const password = req.body.password as string;
+
+    const isMatched = await User.verifyPassword(id, password);
+
+    res.status(200).json({
+      success: true,
+      isMatched,
+    });
+  },
+);
+
 export const uploadProfileImage: RequestHandler = expressAsyncHandler(
   async (req, res) => {
     const file = req.file;
@@ -159,15 +174,13 @@ export const deleteUser: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     const user = req.user?.id as string;
 
-    const { password } = req.body;
-
-    await User.deleteUser(user, password);
-
     res.clearCookie("token", {
       httpOnly: true,
       secure: env !== "development",
       sameSite: "lax",
     });
+
+    await User.deleteUser(user);
 
     res.status(200).json({
       success: true,
