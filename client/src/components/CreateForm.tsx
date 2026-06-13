@@ -14,6 +14,7 @@ const CreateForm = ({ handleClick }: CreateProps) => {
   const { triggerRefresh } = useWrite();
   const [content, setContent] = useState({ title: "", description: "" });
   const [image, setImage] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -47,7 +48,10 @@ const CreateForm = ({ handleClick }: CreateProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
     if (!user?._id) return;
+
+    setIsSubmitting(true);
 
     try {
       const formData = new FormData();
@@ -77,6 +81,8 @@ const CreateForm = ({ handleClick }: CreateProps) => {
       toast.error("Failed to create post");
       handleClick();
       console.error("Failed to create post:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -138,8 +144,12 @@ const CreateForm = ({ handleClick }: CreateProps) => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mt-3">
-        <button type="submit" className="btn-1">
-          Publish Post
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Publishing..." : "Publish Post"}
         </button>
 
         <button type="button" className="btn-2" onClick={handleClick}>
