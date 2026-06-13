@@ -4,6 +4,7 @@ import { FiUpload } from "react-icons/fi";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { setBio as updateBio } from "../api/auth.api";
 import { uploadProfileImage } from "../api/auth.api";
+import imageCompression from "browser-image-compression";
 
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const UserInfo = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [bio, setBio] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!location.state?.fromRegister) {
     return <Navigate to="/" replace />;
@@ -25,22 +27,22 @@ const UserInfo = () => {
     };
   }, [preview]);
 
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Invalid file");
-      return;
-    }
+    try {
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 4,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
 
-    if (file.size > 4 * 1024 * 1024) {
-      toast.error("Image size greater than 4MB");
-      return;
+      setImage(compressedFile);
+    } catch (error) {
+      toast.error("Failed to compress image");
     }
-
-    setImage(file);
 
     const previewUrl = URL.createObjectURL(file);
 
@@ -48,6 +50,10 @@ const UserInfo = () => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     const id: string | undefined = location.state?.id as string | undefined;
 
     if (!id) {
@@ -66,6 +72,8 @@ const UserInfo = () => {
       navigate("/login");
     } catch (error) {
       toast.error("Unable to update profile. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -124,10 +132,10 @@ const UserInfo = () => {
 
           <button
             onClick={handleSubmit}
-            disabled={!image && !bio.trim()}
+            disabled={(!image && !bio.trim()) || isSubmitting}
             className="flex-1 bg-black text-white rounded-2xl py-3 font-semibold hover:scale-[1.02] active:scale-95 transition disabled:opacity-80 disabled:cursor-not-allowed"
           >
-            Continue
+            {isSubmitting ? "Saving..." : "Continue"}
           </button>
         </div>
       </div>
