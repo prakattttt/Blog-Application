@@ -39,6 +39,8 @@ interface IUserModel extends Model<IUser> {
 
   changeName(id: string, name: string): Promise<void>;
 
+  changePassword(id: string, password: string): Promise<void>;
+
   setBio(id: string, bio: string): Promise<void>;
 
   deleteUser(id: string): Promise<void>;
@@ -173,6 +175,18 @@ const UserSchema = new Schema<IUser, IUserModel>(
         if (!user) throw new AppError("User not found!", 400);
 
         user.name = name;
+
+        await user.save();
+      },
+
+      async changePassword(id: string, password: string) {
+        if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+
+        const user = await this.findById(id).select("+password");
+
+        if (!user) throw new AppError("User not found!", 400);
+
+        user.password = password;
 
         await user.save();
       },

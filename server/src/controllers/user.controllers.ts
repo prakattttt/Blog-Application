@@ -170,6 +170,21 @@ export const changeName: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const changePassword: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+
+    const password = req.body.password as string;
+
+    await User.changePassword(user, password);
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  },
+);
+
 export const logoutUser: RequestHandler = expressAsyncHandler(
   async (_req, res) => {
     res.clearCookie("token", {
