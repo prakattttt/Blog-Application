@@ -21,7 +21,7 @@ const ChangePassword = () => {
     formState: { errors },
   } = useForm<ChangePasswordForm>();
 
-  const [showConfirm, setShowCOnfirm] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const newPassword = watch("newPassword");
 
@@ -34,7 +34,7 @@ const ChangePassword = () => {
         return;
       }
 
-      setShowCOnfirm(true);
+      setShowConfirm(true);
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message);
@@ -44,7 +44,7 @@ const ChangePassword = () => {
 
   return (
     <>
-    {showConfirm && <ConfirmPasswordChange setShowConfirm={setShowCOnfirm} newPassword={newPassword}/>}
+    {showConfirm && <ConfirmPasswordChange setShowConfirm={setShowConfirm} newPassword={newPassword}/>}
       <SettingsPage
         title="Change Password"
         description="Choose a strong password to secure your account."
