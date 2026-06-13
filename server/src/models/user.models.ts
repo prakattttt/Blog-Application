@@ -37,6 +37,8 @@ interface IUserModel extends Model<IUser> {
 
   verifyPassword(id: string, password: string): Promise<boolean>;
 
+  changeName(id: string, name: string): Promise<void>;
+
   setBio(id: string, bio: string): Promise<void>;
 
   deleteUser(id: string): Promise<void>;
@@ -161,6 +163,18 @@ const UserSchema = new Schema<IUser, IUserModel>(
         const isMatched = await bcrypt.compare(password, user.password);
 
         return isMatched;
+      },
+
+      async changeName(id: string, name: string) {
+        if (!isValidObjectId(id)) throw new AppError("Invalid Id", 400);
+
+        const user = await this.findById(id);
+
+        if (!user) throw new AppError("User not found!", 400);
+
+        user.name = name;
+
+        await user.save();
       },
 
       async setBio(id: string, bio: string) {

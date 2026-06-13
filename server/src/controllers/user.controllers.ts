@@ -155,6 +155,21 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const changeName: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+
+    const name = req.body.name as string;
+
+    await User.changeName(user, name);
+
+    res.status(200).json({
+      success: true,
+      message: "Name changed successfully",
+    });
+  },
+);
+
 export const logoutUser: RequestHandler = expressAsyncHandler(
   async (_req, res) => {
     res.clearCookie("token", {

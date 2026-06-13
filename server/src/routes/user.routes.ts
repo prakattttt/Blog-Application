@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { getAllUsers, registerUser, loginUser, logoutUser, getMe, setBio, uploadProfileImage, deleteUser, verifyPassword } from "../controllers/user.controllers.js";
+import { getAllUsers, registerUser, loginUser, logoutUser, getMe, setBio, uploadProfileImage, deleteUser, verifyPassword, changeName } from "../controllers/user.controllers.js";
 import authenticateUser from "../middlewares/authenticaton.js";
 import upload from "../middlewares/multer.js";
 
@@ -16,6 +16,8 @@ router.post("/login", loginUser);
 router.post("/verify", authenticateUser, verifyPassword);
 
 router.post("/set-bio/:id", setBio);
+
+router.patch("/change-name", authenticateUser, changeName);
 
 router.post("/set-profileImage/:id", upload.single("profileImage"), uploadProfileImage);
 
