@@ -39,7 +39,7 @@ export const setBio: RequestHandler = expressAsyncHandler(async (req, res) => {
 
   await User.setBio(id, bio);
 
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, message: "Bio successfully changed!" });
 });
 
 export const getMe: RequestHandler = expressAsyncHandler(
