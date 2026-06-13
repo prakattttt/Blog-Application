@@ -7,3 +7,13 @@ export const deleteUser = async () => {
     return response.data.message;
   }
 };
+
+export const changeName = async (name: string) => {
+  const response = await api.patch("/users/change-name", {
+    name
+  });
+
+  if (response.data.success) {
+    return response.data.message;
+  }
+};
