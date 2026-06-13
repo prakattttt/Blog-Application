@@ -4,17 +4,20 @@ import { verifyPassword } from "../api/auth.api";
 import toast from "react-hot-toast";
 import { changeName } from "../api/user.api";
 import useAuth from "../hooks/useAuth";
+import { isAxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   setShowConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ConfirmChange = ({ setShowConfirm, name, setName }: Props) => {
+const ConfirmChange = ({ setShowConfirm, name }: Props) => {
   const { setUser } = useAuth();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleConfirm = async () => {
     if (!password.trim()) return;
@@ -36,14 +39,15 @@ const ConfirmChange = ({ setShowConfirm, name, setName }: Props) => {
         name: name,
       }));
 
-      setName("");
-
-      setShowConfirm(false);
+      navigate("/settings");
 
       toast.success(message);
-      
-    } catch (err: any) {
-      toast.error(err.message || "Something went wrong");
+    } catch (error: any) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data?.message);
+      }
+
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
