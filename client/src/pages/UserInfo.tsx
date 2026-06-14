@@ -1,53 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { FiUpload } from "react-icons/fi";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { setBio as updateBio } from "../api/auth.api";
 import { uploadProfileImage } from "../api/auth.api";
-import imageCompression from "browser-image-compression";
+import UploadProfile from "../components/UploadProfile";
 
 const UserInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [bio, setBio] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!location.state?.fromRegister) {
     return <Navigate to="/" replace />;
   }
-
-  useEffect(() => {
-    return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
-
-  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if (!file) return;
-
-    try {
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 4,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      });
-
-      setImage(compressedFile);
-    } catch (error) {
-      toast.error("Failed to compress image");
-    }
-
-    const previewUrl = URL.createObjectURL(file);
-
-    setPreview(previewUrl);
-  };
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
@@ -58,6 +26,7 @@ const UserInfo = () => {
 
     if (!id) {
       toast.error("Cannot get the registered user!");
+      setIsSubmitting(false);
       navigate("/");
       return;
     }
@@ -88,25 +57,7 @@ const UserInfo = () => {
           Add a profile picture and short bio.
         </p>
 
-        <div className="mt-8 flex flex-col items-center">
-          <label className="relative group cursor-pointer">
-            <input type="file" accept="image/*" hidden onChange={handleImage} />
-
-            {preview ? (
-              <img
-                src={preview}
-                alt="preview"
-                className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 transition group-hover:opacity-80"
-              />
-            ) : (
-              <div className="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center border-2 border-dashed border-gray-300 transition group-hover:bg-gray-200">
-                <FiUpload className="text-3xl text-gray-500" />
-              </div>
-            )}
-          </label>
-
-          <p className="text-sm text-gray-500 mt-3">Upload profile image</p>
-        </div>
+        <UploadProfile onImageSelect={setImage} />
 
         <div className="mt-8">
           <label className="text-md font-semibold text-gray-700">
