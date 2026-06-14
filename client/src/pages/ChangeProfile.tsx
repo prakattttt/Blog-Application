@@ -5,9 +5,10 @@ import useAuth from "../hooks/useAuth";
 import SettingsPage from "../layouts/SettingsLayout";
 import UploadProfile from "../components/UploadProfile";
 import { uploadProfileImage } from "../api/auth.api";
+import { useNavigate } from "react-router-dom";
 
 const ChangeProfileImage = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const [image, setImage] = useState<File | null>(null);
 
@@ -15,13 +16,22 @@ const ChangeProfileImage = () => {
 
   if (!user) return null;
 
+  const navigate = useNavigate();
+
   const handleUpload = async () => {
     if (!image || loading) return;
 
     try {
       setLoading(true);
 
-      await uploadProfileImage(image, user._id);
+      const url = await uploadProfileImage(image, user._id);
+
+      setUser((prev) => ({
+        ...prev!,
+        profileImage: url,
+      }));
+
+      navigate("/settings");
 
       toast.success("Profile image updated!");
     } catch {

@@ -48,5 +48,5 @@ export const uploadProfileImage = async (image: File, id: string) => {
 
   const response = await api.post(`/users/set-profileImage/${id}`, formData);
 
-  return response.data;
+  return response.data.imageUrl;
 };
