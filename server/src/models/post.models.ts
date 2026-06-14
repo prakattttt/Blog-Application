@@ -137,10 +137,6 @@ const PostSchema = new Schema<IPost, IPostModel>(
       },
 
       async getTrendingPosts(skip: number, userId?: string) {
-        if (!isValidObjectId(userId)) {
-          throw new AppError("Invalid ID!", 400);
-        }
-
         const posts = await this.aggregate([
           {
             $addFields: {
