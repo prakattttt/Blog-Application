@@ -129,6 +129,12 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
 
     const id = req.params["id"];
 
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw new AppError("User not found!", 404);
+    }
+
     if (!file) {
       throw new AppError("No image uploaded!", 400);
     }
@@ -142,9 +148,16 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
       resource_type: "image",
     });
 
+    const oldProfileId = user.profileId;
+
     await User.findByIdAndUpdate(id, {
       profileImage: result.secure_url,
+      profileId: result.public_id,
     });
+
+    if (oldProfileId) {
+      await cloudinary.uploader.destroy(oldProfileId);
+    }
 
     await fs.unlink(file.path);
 

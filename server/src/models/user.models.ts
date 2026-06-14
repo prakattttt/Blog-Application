@@ -14,6 +14,7 @@ interface IUser {
   password: string;
   bio?: string;
   profileImage?: string;
+  profileId?: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date | null;
@@ -92,6 +93,11 @@ const UserSchema = new Schema<IUser, IUserModel>(
     profileImage: {
       type: String,
       default: "",
+    },
+
+    profileId: {
+      type: String,
+      default: ""
     },
 
     deletedAt: {
