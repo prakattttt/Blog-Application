@@ -15,6 +15,7 @@ export interface UserInterface {
   password: string;
   bio?: string;
   profileImage?: string;
+  profileId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
