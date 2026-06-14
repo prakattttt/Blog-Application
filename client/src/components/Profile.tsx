@@ -17,27 +17,29 @@ const Profile = () => {
   }
 
   const profileImage = user?.profileImage || profile;
+  const name = user?.name.split(" ")[0];
 
   return (
     <>
       {isLoggedIn ? (
-        <div className="relative flex items-center justify-center">
-          <div className="relative group flex items-center justify-center">
-            <img
-              src={profileImage}
-              alt="profile"
-              onClick={() => setOpenDropdown((prev) => !prev)}
-              className="w-10 h-10 md:w-10 lg:w-12 lg:h-12 rounded-full object-cover cursor-pointer hover:scale-105 transition-all duration-300"
-            />
+        <div className="relative flex flex-col items-center w-14 translate-x-1">
+          <img
+            src={profileImage}
+            alt="profile"
+            onClick={() => setOpenDropdown((prev) => !prev)}
+            className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover cursor-pointer hover:scale-105 transition-all duration-300"
+          />
 
-            {!openDropdown && (
-              <span className="hover-info">
-                <div className="mini-arrow"></div>
-                Profile
-              </span>
-            )}
-          </div>
+          <span className="mt-1 w-full text-center text-[13px] text-gray-600 truncate leading-none">
+            {name}
+          </span>
 
+          {!openDropdown && (
+            <span className="hover-info">
+              <div className="mini-arrow"></div>
+              Profile
+            </span>
+          )}
           {openDropdown && (
             <Dropdown closeDropdown={() => setOpenDropdown(false)} />
           )}
@@ -46,7 +48,7 @@ const Profile = () => {
         <div className="relative group flex items-center justify-center">
           <Link
             to={"/login"}
-            className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
           >
             <FiUser className="text-lg md:text-xl text-black" />
           </Link>
