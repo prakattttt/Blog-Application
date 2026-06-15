@@ -17,7 +17,8 @@ const Profile = () => {
   }
 
   const profileImage = user?.profileImage || profile;
-  const name = user?.name.split(" ")[0];
+
+  const name = user?.name?.trim()?.split(" ")?.[0] || "Guest";
 
   return (
     <>
@@ -45,13 +46,16 @@ const Profile = () => {
           )}
         </div>
       ) : (
-        <div className="relative group flex items-center justify-center">
+        <div className="relative group flex flex-col items-center justify-center">
           <Link
             to={"/login"}
             className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
           >
             <FiUser className="text-lg md:text-xl text-black" />
           </Link>
+          <span className="mt-1 w-full text-center text-[13px] text-gray-600 truncate leading-none">
+            {name}
+          </span>
 
           <span className="hover-info">
             <div className="mini-arrow"></div>
