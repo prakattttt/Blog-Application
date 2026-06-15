@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import {
   FaHeart,
@@ -8,6 +8,7 @@ import {
   FaBookmark,
 } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
+import { PiDotsThreeOutlineFill } from "react-icons/pi";
 
 import { getSinglePost } from "../api/post.api";
 import Loader from "../components/Loader";
@@ -20,6 +21,7 @@ import ReactMarkdown from "react-markdown";
 import Comments from "../components/Comments";
 import { getIsBookmarked, toggleBookmark } from "../api/bookmark.api";
 import toast from "react-hot-toast";
+import Options from "../components/Options";
 
 const Post = () => {
   const { id } = useParams();
@@ -31,6 +33,9 @@ const Post = () => {
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [options, setOptions] = useState(false);
+
+  const myPost = user?._id.toString() === post?.author._id.toString();
 
   useEffect(() => {
     async function run() {
@@ -64,6 +69,10 @@ const Post = () => {
   if (!post) {
     return <Navigate to="/" replace />;
   }
+
+  const toggleOptions = async () => {
+    setOptions((prev) => !prev);
+  };
 
   const handleLike = async () => {
     if (!id || !post) return;
@@ -109,22 +118,45 @@ const Post = () => {
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
-          <div
-            className={`flex items-center gap-4 px-6 ${post.imageSrc ? "py-5" : "py-3"}`}
-          >
-            <img
-              src={post.author.profileImage || profile}
-              alt="profile"
-              className="w-12 h-12 rounded-full object-cover border border-gray-200"
-            />
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-4 px-6 py-3">
+              <img
+                src={post.author.profileImage || profile}
+                alt="profile"
+                className="w-12 h-12 rounded-full object-cover border border-gray-200"
+              />
 
-            <div>
-              <h2 className="font-bold text-black">{post.author.name}</h2>
+              <div>
+                <h2 className="font-bold text-black">{post.author.name}</h2>
 
-              <p className="text-xs text-gray-500">
-                {new Date(post.createdAt).toLocaleDateString()}
-              </p>
+                <p className="text-xs text-gray-500">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
+            {myPost && (
+              <PiDotsThreeOutlineFill
+                size={24}
+                className="mx-5 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleOptions();
+                }}
+              />
+            )}
+            {options && (
+              <Options
+                onClose={() => setOptions(false)}
+                onEdit={() => {
+                  console.log("edit");
+                  setOptions(false);
+                }}
+                onDelete={() => {
+                  console.log("delete");
+                  setOptions(false);
+                }}
+              />
+            )}
           </div>
 
           {post.imageSrc && (
