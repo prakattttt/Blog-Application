@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import {
   FaHeart,
@@ -147,14 +147,6 @@ const Post = () => {
             {options && (
               <Options
                 onClose={() => setOptions(false)}
-                onEdit={() => {
-                  console.log("edit");
-                  setOptions(false);
-                }}
-                onDelete={() => {
-                  console.log("delete");
-                  setOptions(false);
-                }}
               />
             )}
           </div>

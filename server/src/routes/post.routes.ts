@@ -20,6 +20,6 @@ router.post("/:id", upload.single("image"), createPost);
 
 router.patch("/like/:id", authenticateUser, toggleLike);
 
-router.delete("/:id", deletePost);
+router.delete("/:id", authenticateUser, deletePost);
 
 export default router;
