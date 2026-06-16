@@ -30,7 +30,7 @@ const Dropdown = ({ closeDropdown }: DropdownProps) => {
   }
 
   return (
-    <div className="absolute top-15 -left-46 md:right-0 md:translate-x-0 w-60 rounded-2xl bg-white/90 backdrop-blur-xl border border-gray-200 shadow-2xl shadow-black/10 p-2 z-100 animate-[fadeIn_0.2s_ease]">
+    <div className="absolute top-15 -left-42 md:right-0 md:translate-x-0 w-60 rounded-2xl bg-white/90 backdrop-blur-xl border border-gray-200 shadow-2xl shadow-black/10 p-2 z-100 animate-[fadeIn_0.2s_ease]">
       <div className="absolute -top-2 right-6 w-4 h-4 bg-white rotate-45 border-l border-t border-gray-200"></div>
       <Link
         to="/settings"

@@ -23,15 +23,15 @@ const Profile = () => {
   return (
     <>
       {isLoggedIn ? (
-        <div className="relative flex flex-col items-center w-14 translate-x-1">
+        <div className="relative flex flex-col items-center w-20">
           <img
             src={profileImage}
             alt="profile"
             onClick={() => setOpenDropdown((prev) => !prev)}
-            className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover cursor-pointer hover:scale-105 transition-all duration-300"
+            className="w-9 h-9 rounded-full object-cover cursor-pointer hover:scale-105 transition"
           />
 
-          <span className="mt-1 w-full text-center text-[13px] text-gray-600 truncate leading-none">
+          <span className="text-xs text-gray-600 leading-none mt-0.5">
             {name}
           </span>
 
@@ -46,19 +46,15 @@ const Profile = () => {
           )}
         </div>
       ) : (
-        <div className="relative group flex flex-col items-center justify-center">
+        <div className="relative flex flex-col items-center w-20">
           <Link
-            to={"/login"}
-            className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
+            to="/login"
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition"
           >
-            <FiUser className="text-lg md:text-xl text-black" />
+            <FiUser className="text-lg" />
           </Link>
-          <span className="mt-1 w-full text-center text-[13px] text-gray-600 truncate leading-none">
-            {name}
-          </span>
 
-          <span className="hover-info">
-            <div className="mini-arrow"></div>
+          <span className="text-xs text-gray-600 leading-none mt-0.5">
             Login
           </span>
         </div>
