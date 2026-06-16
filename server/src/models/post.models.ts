@@ -44,7 +44,7 @@ interface IPostModel extends Model<IPost> {
 
   toggleLike(author: string, postId: string): Promise<boolean>;
 
-  deletePost(id: string): Promise<void>;
+  deletePost(id: string, userId: string): Promise<void>;
 }
 
 const attachBookmarks = async (
@@ -242,9 +242,22 @@ const PostSchema = new Schema<IPost, IPostModel>(
         return true;
       },
 
-      async deletePost(id: string) {
+      async deletePost(id: string, userId: string) {
         if (!isValidObjectId(id)) {
           throw new AppError("Invalid ID!", 400);
+        }
+
+        const post = await this.findById(id);
+
+        if (!post) {
+          throw new AppError("Post not found!", 404);
+        }
+
+        if (post.author.toString() !== userId) {
+          throw new AppError(
+            "You are not authorized to delete this post!",
+            403,
+          );
         }
 
         await this.findByIdAndDelete(id);

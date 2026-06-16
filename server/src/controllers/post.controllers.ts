@@ -132,7 +132,8 @@ export const toggleLike: RequestHandler = expressAsyncHandler(
 );
 
 export const deletePost: RequestHandler = expressAsyncHandler(
-  async (req, res) => {
+  async (req: AuthRequest, res) => {
+    const userId = req.user?.id as string; 
     const postId: string = req.params["id"] as string;
 
     const post = await Post.findById(postId);
@@ -142,7 +143,7 @@ export const deletePost: RequestHandler = expressAsyncHandler(
       await cloudinary.uploader.destroy(imgId);
     }
 
-    await Post.deletePost(postId);
+    await Post.deletePost(postId, userId);
 
     res.status(204).json({
       success: true,
