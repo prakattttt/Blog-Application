@@ -7,6 +7,8 @@ interface IPost {
   description: string;
   imageSrc?: string;
 
+  imageId?: string;
+
   author: Types.ObjectId;
 
   likes: Types.ObjectId[];
@@ -25,6 +27,7 @@ interface PostBody {
   title: string;
   description: string;
   imageSrc?: string;
+  imageId?: string;
   author: string;
 }
 
@@ -85,6 +88,12 @@ const PostSchema = new Schema<IPost, IPostModel>(
 
     imageSrc: {
       type: String,
+      default: "",
+    },
+
+    imageId: {
+      type: String,
+      default: "",
     },
 
     author: {

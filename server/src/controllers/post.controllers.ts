@@ -79,6 +79,7 @@ export const createPost: RequestHandler = expressAsyncHandler(
     const file = req.file;
 
     let imageSrc = "";
+    let imageId = "";
 
     if (file) {
       const result = await cloudinary.uploader.upload(file.path, {
@@ -86,7 +87,8 @@ export const createPost: RequestHandler = expressAsyncHandler(
         resource_type: "image",
       });
 
-      imageSrc = result.secure_url || "";
+      imageSrc = result.secure_url;
+      imageId = result.public_id;
 
       await fs.unlink(file.path);
     }
@@ -101,6 +103,7 @@ export const createPost: RequestHandler = expressAsyncHandler(
       title,
       description,
       imageSrc,
+      imageId,
       author,
     });
 
@@ -130,9 +133,16 @@ export const toggleLike: RequestHandler = expressAsyncHandler(
 
 export const deletePost: RequestHandler = expressAsyncHandler(
   async (req, res) => {
-    const author: string = req.params["id"] as string;
+    const postId: string = req.params["id"] as string;
 
-    await Post.deletePost(author);
+    const post = await Post.findById(postId);
+    const imgId = post?.imageId;
+    
+    if (imgId) {
+      await cloudinary.uploader.destroy(imgId);
+    }
+
+    await Post.deletePost(postId);
 
     res.status(204).json({
       success: true,
