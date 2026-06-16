@@ -1,45 +1,19 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
-import { deletePost } from "../api/post.api";
-import { isAxiosError } from "axios";
-import toast from "react-hot-toast";
 
 type Props = {
   onClose: () => void;
+  onDelete: () => void;
 };
 
-const Options = ({ onClose }: Props) => {
-  const { id } = useParams();
-
-  const navigate = useNavigate();
-
-  if (!id) {
-    return;
-  }
-
-  const onEdit = () => {
+const Options = ({ onClose, onDelete }: Props) => {
+  const handleOnEdit = () => {
     onClose();
   };
 
-  const onDelete = async () => {
-    try {
-      await deletePost(id);
-      onClose();
-      toast.success("Post deleted successfully.")
-      navigate("/");
-    } catch (error: unknown) {
-      if (isAxiosError(error)) {
-        toast.error(error.response?.data.message);
-        return;
-      }
-
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    }
+  const handleOnDelete = async () => {
+    onDelete();
   };
+
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -47,7 +21,7 @@ const Options = ({ onClose }: Props) => {
       <div className="absolute right-2 top-14 bg-white shadow-lg rounded-xl border border-gray-200 w-44 z-50">
         <div className="relative group">
           <button
-            onClick={onEdit}
+            onClick={handleOnEdit}
             className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 transition"
           >
             <FaEdit />
@@ -58,7 +32,7 @@ const Options = ({ onClose }: Props) => {
         </div>
 
         <button
-          onClick={onDelete}
+          onClick={handleOnDelete}
           className="w-full px-4 py-3 flex items-center gap-3 text-red-500 hover:bg-red-50 transition"
         >
           <FaTrash />

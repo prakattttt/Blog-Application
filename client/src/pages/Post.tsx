@@ -22,6 +22,7 @@ import Comments from "../components/Comments";
 import { getIsBookmarked, toggleBookmark } from "../api/bookmark.api";
 import toast from "react-hot-toast";
 import Options from "../components/Options";
+import ConfirmDelete from "../components/ConfirmDelete";
 
 const Post = () => {
   const { id } = useParams();
@@ -34,6 +35,7 @@ const Post = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [options, setOptions] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const myPost = user?._id.toString() === post?.author._id.toString();
 
@@ -115,139 +117,148 @@ const Post = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-4 px-6 py-3">
-              <img
-                src={post.author.profileImage || profile}
-                alt="profile"
-                className="w-12 h-12 rounded-full object-cover border border-gray-200"
-              />
+    <>
+      {showConfirm && <ConfirmDelete setShowConfirm={setShowConfirm} />}
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center gap-4 px-6 py-3">
+                <img
+                  src={post.author.profileImage || profile}
+                  alt="profile"
+                  className="w-12 h-12 rounded-full object-cover border border-gray-200"
+                />
 
-              <div>
-                <h2 className="font-bold text-black">{post.author.name}</h2>
+                <div>
+                  <h2 className="font-bold text-black">{post.author.name}</h2>
 
-                <p className="text-xs text-gray-500">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            </div>
-            {myPost && (
-              <PiDotsThreeOutlineFill
-                size={24}
-                className="mx-5 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleOptions();
-                }}
-              />
-            )}
-            {options && (
-              <Options
-                onClose={() => setOptions(false)}
-              />
-            )}
-          </div>
-
-          {post.imageSrc && (
-            <img
-              src={post.imageSrc}
-              alt="post"
-              className="w-full max-h-125 object-cover"
-            />
-          )}
-
-          <div className={`${post.imageSrc ? "p-6" : "px-6"}`}>
-            <h1 className="text-3xl font-extrabold leading-tight text-black">
-              {post.title}
-            </h1>
-
-            <div className="mt-4">
-              <div
-                className={`text-gray-800 prose max-w-none whitespace-pre-wrap ${
-                  !expanded && "line-clamp-5"
-                }`}
-              >
-                <ReactMarkdown>{post.description}</ReactMarkdown>
-              </div>
-
-              {post.description.length > 250 && (
-                <button
-                  onClick={() => setExpanded((prev) => !prev)}
-                  className="mt-2 text-sm font-semibold text-black hover:underline"
-                >
-                  {expanded ? "Show Less" : "Expand More"}
-                </button>
+              {myPost && (
+                <PiDotsThreeOutlineFill
+                  size={24}
+                  className="mx-5 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleOptions();
+                  }}
+                />
+              )}
+              {options && (
+                <Options
+                  onClose={() => setOptions(false)}
+                  onDelete={() => {
+                    setOptions(false);
+                    setShowConfirm(true);
+                  }}
+                />
               )}
             </div>
 
-            <div className="flex items-center justify-between py-6 mt-6 border-t border-gray-200">
-              <div className="flex items-center gap-6">
-                <button
-                  onClick={handleLike}
-                  className={`flex items-center gap-2 transition ${
-                    isLiked
-                      ? "text-red-500"
-                      : "text-gray-700 hover:text-red-500"
+            {post.imageSrc && (
+              <img
+                src={post.imageSrc}
+                alt="post"
+                className="w-full max-h-125 object-cover"
+              />
+            )}
+
+            <div className={`${post.imageSrc ? "p-6" : "px-6"}`}>
+              <h1 className="text-3xl font-extrabold leading-tight text-black">
+                {post.title}
+              </h1>
+
+              <div className="mt-4">
+                <div
+                  className={`text-gray-800 prose max-w-none whitespace-pre-wrap ${
+                    !expanded && "line-clamp-5"
                   }`}
                 >
-                  {isLiked ? (
-                    <FaHeart className="text-2xl" />
-                  ) : (
-                    <FaRegHeart className="text-2xl" />
-                  )}
-                  <span>{post.likes.length}</span>
-                </button>
+                  <ReactMarkdown>{post.description}</ReactMarkdown>
+                </div>
 
-                <button
-                  onClick={() => setShowComments(true)}
-                  className="flex items-center gap-2 text-gray-700 hover:text-black transition"
-                >
-                  <FaRegComment className="text-2xl" />
-                  <span>{post.commentsCount}</span>
-                </button>
+                {post.description.length > 250 && (
+                  <button
+                    onClick={() => setExpanded((prev) => !prev)}
+                    className="mt-2 text-sm font-semibold text-black hover:underline"
+                  >
+                    {expanded ? "Show Less" : "Expand More"}
+                  </button>
+                )}
               </div>
 
-              <button
-                onClick={handleBookmark}
-                className={`flex items-center gap-2 ${
-                  isBookmarked ? "text-black" : "text-gray-700 hover:text-black"
-                }`}
-              >
-                {isBookmarked ? (
-                  <FaBookmark className="text-2xl" />
-                ) : (
-                  <FaRegBookmark className="text-2xl" />
-                )}
-              </button>
+              <div className="flex items-center justify-between py-6 mt-6 border-t border-gray-200">
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={handleLike}
+                    className={`flex items-center gap-2 transition ${
+                      isLiked
+                        ? "text-red-500"
+                        : "text-gray-700 hover:text-red-500"
+                    }`}
+                  >
+                    {isLiked ? (
+                      <FaHeart className="text-2xl" />
+                    ) : (
+                      <FaRegHeart className="text-2xl" />
+                    )}
+                    <span>{post.likes.length}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowComments(true)}
+                    className="flex items-center gap-2 text-gray-700 hover:text-black transition"
+                  >
+                    <FaRegComment className="text-2xl" />
+                    <span>{post.commentsCount}</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleBookmark}
+                  className={`flex items-center gap-2 ${
+                    isBookmarked
+                      ? "text-black"
+                      : "text-gray-700 hover:text-black"
+                  }`}
+                >
+                  {isBookmarked ? (
+                    <FaBookmark className="text-2xl" />
+                  ) : (
+                    <FaRegBookmark className="text-2xl" />
+                  )}
+                </button>
+              </div>
+              <Comments
+                showComments={showComments}
+                postID={id ?? ""}
+                onCommentAdded={() =>
+                  setPost((prev) =>
+                    prev
+                      ? { ...prev, commentsCount: prev.commentsCount + 1 }
+                      : prev,
+                  )
+                }
+              />
             </div>
-            <Comments
-              showComments={showComments}
-              postID={id ?? ""}
-              onCommentAdded={() =>
-                setPost((prev) =>
-                  prev
-                    ? { ...prev, commentsCount: prev.commentsCount + 1 }
-                    : prev,
-                )
-              }
-            />
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              to="/"
+              className="text-gray-600 hover:text-black transition flex items-center gap-1"
+            >
+              <FiArrowLeft size={20} />
+              Back to home
+            </Link>
           </div>
         </div>
-
-        <div className="mt-10 flex justify-center">
-          <Link
-            to="/"
-            className="text-gray-600 hover:text-black transition flex items-center gap-1"
-          >
-            <FiArrowLeft size={20} />
-            Back to home
-          </Link>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 
