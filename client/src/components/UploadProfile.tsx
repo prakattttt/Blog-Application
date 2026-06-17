@@ -33,10 +33,6 @@ const UploadProfile = ({ initialImage, onImageSelect }: UploadProfileProps) => {
 
       onImageSelect(compressedFile);
 
-      if (preview && preview.startsWith("blob:")) {
-        URL.revokeObjectURL(preview);
-      }
-
       setPreview(URL.createObjectURL(file));
     } catch {
       toast.error("Failed to compress image");
