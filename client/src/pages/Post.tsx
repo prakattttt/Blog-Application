@@ -126,6 +126,10 @@ const Post = () => {
           image={post.imageSrc || ""}
           title={post.title}
           description={post.description}
+          onSuccess={(updatedPost) => {
+            setPost(updatedPost);
+            setShowEdit(false);
+          }}
           onClose={() => setShowEdit(false)}
         />
       )}

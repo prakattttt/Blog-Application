@@ -5,15 +5,17 @@ import toast from "react-hot-toast";
 import { editPost } from "../api/post.api";
 import { isAxiosError } from "axios";
 import { useParams } from "react-router-dom";
+import type { PostCard } from "../types/posts.types";
 
 type Props = {
   image: string;
   title: string;
   description: string;
   onClose: () => void;
+  onSuccess: (updatedPost: PostCard) => void;
 };
 
-const EditPost = ({ image, title, description, onClose }: Props) => {
+const EditPost = ({ image, title, description, onClose, onSuccess }: Props) => {
   const { id } = useParams();
 
   const [postTitle, setPostTitle] = useState(title);
@@ -76,9 +78,11 @@ const EditPost = ({ image, title, description, onClose }: Props) => {
         formData.append("image", imageFile);
       }
 
-      const message = await editPost(formData, id);
+      const response = await editPost(formData, id);
 
-      toast.success(message);
+      onSuccess(response.post);
+
+      toast.success(response.message);
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message);

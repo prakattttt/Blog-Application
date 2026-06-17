@@ -44,7 +44,7 @@ export const editPost = async (body: FormData, id: string) => {
   const response = await api.patch(`/posts/${id}`, body);
 
   if (response.data.success) {
-    return response.data.message;
+    return response.data;
   }
 };
 
