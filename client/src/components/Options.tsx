@@ -3,11 +3,12 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 type Props = {
   onClose: () => void;
   onDelete: () => void;
+  onEdit: () => void;
 };
 
-const Options = ({ onClose, onDelete }: Props) => {
+const Options = ({ onClose, onDelete, onEdit }: Props) => {
   const handleOnEdit = () => {
-    onClose();
+    onEdit();
   };
 
   const handleOnDelete = async () => {

@@ -23,6 +23,7 @@ import { getIsBookmarked, toggleBookmark } from "../api/bookmark.api";
 import toast from "react-hot-toast";
 import Options from "../components/Options";
 import ConfirmDelete from "../components/ConfirmDelete";
+import EditPost from "../components/EditPost";
 
 const Post = () => {
   const { id } = useParams();
@@ -36,6 +37,7 @@ const Post = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [options, setOptions] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const myPost = user?._id.toString() === post?.author._id.toString();
 
@@ -72,7 +74,7 @@ const Post = () => {
     return <Navigate to="/" replace />;
   }
 
-  const toggleOptions = async () => {
+  const toggleOptions = () => {
     setOptions((prev) => !prev);
   };
 
@@ -119,6 +121,14 @@ const Post = () => {
   return (
     <>
       {showConfirm && <ConfirmDelete setShowConfirm={setShowConfirm} />}
+      {showEdit && (
+        <EditPost
+          image={post.imageSrc || ""}
+          title={post.title}
+          description={post.description}
+          onClose={() => setShowEdit(false)}
+        />
+      )}
       <div className="min-h-screen bg-gray-100 py-10 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
@@ -154,6 +164,10 @@ const Post = () => {
                   onDelete={() => {
                     setOptions(false);
                     setShowConfirm(true);
+                  }}
+                  onEdit={() => {
+                    setOptions(false);
+                    setShowEdit(true);
                   }}
                 />
               )}
