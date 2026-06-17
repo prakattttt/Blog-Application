@@ -140,7 +140,7 @@ export const uploadProfileImage: RequestHandler = expressAsyncHandler(
     }
 
     if (!id) {
-      throw new AppError("User ID now found!!", 400);
+      throw new AppError("User ID not found!!", 400);
     }
 
     const result = await cloudinary.uploader.upload(file.path, {
