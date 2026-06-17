@@ -158,10 +158,15 @@ export const editPost: RequestHandler = expressAsyncHandler(
 
     await post.save();
 
+    const updatedPost = await Post.findById(post._id).populate(
+      "author",
+      "name profileImage",
+    );
+
     res.status(200).json({
       success: true,
       message: "Post successfully edited",
-      post,
+      post: updatedPost,
     });
   },
 );
