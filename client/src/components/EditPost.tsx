@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaImage, FaTimes } from "react-icons/fa";
-// import imageCompression from "browser-image-compression";
+import imageCompression from "browser-image-compression";
 import toast from "react-hot-toast";
+import { editPost } from "../api/post.api";
+import { isAxiosError } from "axios";
+import { useParams } from "react-router-dom";
 
 type Props = {
   image: string;
@@ -11,9 +14,13 @@ type Props = {
 };
 
 const EditPost = ({ image, title, description, onClose }: Props) => {
+  const { id } = useParams();
+
   const [postTitle, setPostTitle] = useState(title);
   const [postDescription, setPostDescription] = useState(description);
   const [preview, setPreview] = useState(image);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -29,7 +36,7 @@ const EditPost = ({ image, title, description, onClose }: Props) => {
         URL.revokeObjectURL(preview);
       }
     };
-  }, []);
+  }, [preview]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,19 +46,51 @@ const EditPost = ({ image, title, description, onClose }: Props) => {
     }
 
     try {
-    //   const compressedFile = await imageCompression(file, {
-    //     maxSizeMB: 4,
-    //     maxWidthOrHeight: 1920,
-    //     useWebWorker: true,
-    //   });
-      setPreview(URL.createObjectURL(file));
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 4,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+      setImageFile(compressedFile);
+      setPreview(URL.createObjectURL(compressedFile));
     } catch {
       toast.error("Failed to compress image");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Edit button clicked!");
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    if (!id) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append("title", postTitle);
+      formData.append("description", postDescription);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      const message = await editPost(formData, id);
+
+      toast.success(message);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setIsSubmitting(false);
+      onClose();
+    }
   };
 
   return (
@@ -133,8 +172,12 @@ const EditPost = ({ image, title, description, onClose }: Props) => {
                 Cancel
               </button>
 
-              <button onClick={handleSubmit} className="btn-1">
-                Save Changes
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="btn-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Saving..." : "Save changes"}
               </button>
             </div>
           </div>

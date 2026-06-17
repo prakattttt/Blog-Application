@@ -40,6 +40,14 @@ export const createPost = async (body: FormData, id: string) => {
   }
 };
 
+export const editPost = async (body: FormData, id: string) => {
+  const response = await api.patch(`/posts/${id}`, body);
+
+  if (response.data.success) {
+    return response.data.message;
+  }
+};
+
 export const toggleLike = async (id: string) => {
   const response = await api.patch(`/posts/like/${id}`);
 
