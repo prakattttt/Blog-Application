@@ -115,6 +115,57 @@ export const createPost: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const editPost: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const userId = req.user?.id;
+    const postId = req.params["id"] as string;
+
+    const file = req.file;
+    const { title, description } = req.body;
+
+    if (!userId) throw new AppError("User not found!", 404);
+
+    const post = await Post.findById(postId);
+    if (!post) throw new AppError("Post not found!", 404);
+
+    if (post.author.toString() !== userId) {
+      throw new AppError("Unauthorized!", 403);
+    }
+
+    let updatedImage = post.imageSrc || "";
+    let updatedImageId = post.imageId || "";
+
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "blog-posts",
+        resource_type: "image",
+      });
+
+      if (post.imageId) {
+        await cloudinary.uploader.destroy(post.imageId);
+      }
+
+      updatedImage = result.secure_url;
+      updatedImageId = result.public_id;
+
+      await fs.unlink(file.path);
+    }
+
+    post.title = title || post.title;
+    post.description = description || post.description;
+    post.imageSrc = updatedImage;
+    post.imageId = updatedImageId;
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Post successfully edited",
+      post,
+    });
+  },
+);
+
 export const toggleLike: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     if (!req.user) throw new AppError("User not found!", 404);
@@ -133,12 +184,17 @@ export const toggleLike: RequestHandler = expressAsyncHandler(
 
 export const deletePost: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
-    const userId = req.user?.id as string; 
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new AppError("User not found!", 404);
+    }
+
     const postId: string = req.params["id"] as string;
 
     const post = await Post.findById(postId);
     const imgId = post?.imageId;
-    
+
     if (imgId) {
       await cloudinary.uploader.destroy(imgId);
     }
