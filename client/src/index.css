@@ -27,3 +27,7 @@
 .btn-primary {
   @apply px-5 py-2 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition mt-4;
 }
+
+.mini-click {
+  @apply text-[14px] font-medium hover:underline cursor-pointer;
+}

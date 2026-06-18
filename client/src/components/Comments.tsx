@@ -7,8 +7,12 @@ import toast from "react-hot-toast";
 import type { CommentItem, commentInterface } from "../types/comment.types";
 import useAuth from "../hooks/useAuth";
 
-const Comments = ({ showComments, postID, onCommentAdded }: commentInterface) => {
-  const { isLoggedIn } = useAuth();
+const Comments = ({
+  showComments,
+  postID,
+  onCommentAdded,
+}: commentInterface) => {
+  const { isLoggedIn, user } = useAuth();
 
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -69,21 +73,23 @@ const Comments = ({ showComments, postID, onCommentAdded }: commentInterface) =>
             Be the first to share your thoughts.
           </p>
         </div>
-        <div className="mt-6 flex items-center gap-3">
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
-          />
+        <div className="container">
+          <div className="mt-6 flex items-center gap-3">
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+              className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
+            />
 
-          <button
-            className="px-5 py-3 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition"
-            onClick={handleComment}
-          >
-            Post
-          </button>
+            <button
+              className="px-5 py-3 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition"
+              onClick={handleComment}
+            >
+              Post
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -101,15 +107,27 @@ const Comments = ({ showComments, postID, onCommentAdded }: commentInterface) =>
                   alt="comment-profile"
                   className="w-11 h-11 rounded-full object-cover"
                 />
+                <div className="container">
+                  <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1">
+                    <h3 className="font-bold text-sm text-black">
+                      {item.user.name}
+                    </h3>
 
-                <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1">
-                  <h3 className="font-bold text-sm text-black">
-                    {item.user.name}
-                  </h3>
-
-                  <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                    {item.text}
-                  </p>
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                      {item.text}
+                    </p>
+                  </div>
+                  {
+                    item.user._id === user?._id &&
+                    <div className="flex gap-3 ml-4 mt-1">
+                      <span className="mini-click text-blue-500 hover:text-blue-600">
+                        Edit
+                      </span>
+                      <span className="mini-click text-red-500 hover:text-red-600">
+                        Delete
+                      </span>
+                    </div>
+                  }
                 </div>
               </div>
             ))}
