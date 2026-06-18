@@ -17,6 +17,9 @@ const Comments = ({
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
+  const [editedText, setEditedText] = useState("");
+  const [editCommentId, setEditCommentId] = useState("");
+  // const [deleteComment, setDeleteComment] = useState(false);
 
   useEffect(() => {
     const run = async () => {
@@ -39,6 +42,7 @@ const Comments = ({
     if (!isLoggedIn) {
       toast.error("Please login to add a comment!");
       setNewComment("");
+      return;
     }
     try {
       const createdComment = await addPostComments(postID, newComment);
@@ -51,6 +55,19 @@ const Comments = ({
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleEditComment = (id: string, text: string) => {
+    setEditCommentId(id);
+    setEditedText(text);
+  };
+
+  const handleEdit = () => {
+    console.log("Edit");
+  };
+
+  const handleDeleteComment = () => {
+    console.log("Delete");
   };
 
   if (loading) {
@@ -80,7 +97,7 @@ const Comments = ({
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a comment..."
-              className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
+              className="border rounded-xl px-4 py-3 outline-none transition-all duration-300 border-gray-300 focus:border-black focus:ring-2 focus:ring-black/20"
             />
 
             <button
@@ -114,20 +131,50 @@ const Comments = ({
                     </h3>
 
                     <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                      {item.text}
+                      {editCommentId === item._id ? (
+                        <>
+                          <input
+                          className="w-full flex-1 border border-gray-300 rounded-2xl px-3 py-2 outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
+                            value={editedText}
+                            onChange={(e) => setEditedText(e.target.value)}
+                          />
+                          <div className="flex gap-3 mt-2">
+                            <button
+                              className="bg-black text-white rounded-xl px-3 py-1 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-xs"
+                              onClick={handleEdit}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="border border-gray-300 rounded-xl px-3 py-1 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer text-xs;
+"
+                              onClick={() => setEditCommentId("")}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <p>{item.text}</p>
+                      )}
                     </p>
                   </div>
-                  {
-                    item.user._id === user?._id &&
+                  {item.user._id === user?._id && (
                     <div className="flex gap-3 ml-4 mt-1">
-                      <span className="mini-click text-blue-500 hover:text-blue-600">
+                      <span
+                        className="mini-click text-blue-500 hover:text-blue-600"
+                        onClick={() => handleEditComment(item._id, item.text)}
+                      >
                         Edit
                       </span>
-                      <span className="mini-click text-red-500 hover:text-red-600">
+                      <span
+                        className="mini-click text-red-500 hover:text-red-600"
+                        onClick={handleDeleteComment}
+                      >
                         Delete
                       </span>
                     </div>
-                  }
+                  )}
                 </div>
               </div>
             ))}
