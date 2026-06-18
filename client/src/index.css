@@ -1,33 +1,35 @@
 @import "tailwindcss";
 
-.popup {
-  @apply transition-all duration-150 ease-linear hover:scale-105;
-}
+@layer utilities {
+  .popup {
+    @apply transition-all duration-150 ease-linear hover:scale-105;
+  }
 
-.hover-info {
-  @apply absolute -bottom-9 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all delay-75 duration-500 text-sm bg-black text-white px-2 py-1 rounded-md shadow-md;
-}
+  .hover-info {
+    @apply absolute -bottom-9 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all delay-75 duration-500 text-sm bg-black text-white px-2 py-1 rounded-md shadow-md;
+  }
 
-.mini-arrow {
-  @apply absolute -top-1 right-6 w-2 h-2 bg-black rotate-45 border-l border-t border-gray-700;
-}
+  .mini-arrow {
+    @apply absolute -top-1 right-6 w-2 h-2 bg-black rotate-45 border-l border-t border-gray-700;
+  }
 
-.btn-1 {
-  @apply bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
-}
+  .btn-1 {
+    @apply bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
+  }
 
-.btn-2 {
-  @apply border border-gray-300 rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer;
-}
+  .btn-2 {
+    @apply border border-gray-300 rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer;
+  }
 
-.input {
-  @apply w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition;
-}
+  .input {
+    @apply w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition;
+  }
 
-.btn-primary {
-  @apply px-5 py-2 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition mt-4;
-}
+  .btn-primary {
+    @apply px-5 py-2 rounded-2xl bg-black text-white font-semibold hover:scale-[1.02] active:scale-95 transition mt-4;
+  }
 
-.mini-click {
-  @apply text-[14px] font-medium hover:underline cursor-pointer;
+  .mini-click {
+    @apply text-[14px] font-medium hover:underline cursor-pointer;
+  }
 }
