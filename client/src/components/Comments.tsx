@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   addPostComments,
   getPostComments,
+  editPostComments,
   deletePostComments,
 } from "../api/comment.api";
 import { FaRegCommentDots } from "react-icons/fa";
@@ -17,13 +18,14 @@ const Comments = ({
   showComments,
   postID,
   onCommentAdded,
-  onCommentDeleted
+  onCommentDeleted,
 }: commentInterface) => {
   const { isLoggedIn, user } = useAuth();
 
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
+  const [editLoading, setEditLoading] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [editCommentId, setEditCommentId] = useState("");
   const [deleteCommentId, setDeleteCommentId] = useState("");
@@ -88,8 +90,43 @@ const Comments = ({
     }, 0);
   };
 
-  const handleEdit = () => {
-    console.log("Edit");
+  const handleEdit = async () => {
+    if (!editedText.trim()) return;
+
+    try {
+      setEditLoading(true);
+
+      const data = await editPostComments(editCommentId, editedText);
+
+      const updatedComments = comments.map((comment) =>
+        comment._id === data.comments._id
+          ? {
+              ...comment,
+              text: data.comments.text,
+            }
+          : comment,
+      );
+
+      setComments(updatedComments);
+
+      setEditCommentId("");
+      setEditedText("");
+
+      toast.success(data.message);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+        return;
+      }
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      setEditLoading(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -151,7 +188,7 @@ const Comments = ({
                 autoResize(e.target);
               }}
               placeholder="Write a comment..."
-              className="border rounded-xl p-4 outline-none transition-all duration-300 border-gray-300 focus:border-black focus:ring-2 focus:ring-black/20 resize-none overflow-hidden min-h-13 w-full"
+              className="border rounded-xl p-4 outline-none transition-all duration-300 border-gray-300 focus:border-black focus:ring-2 focus:ring-black/20 resize-none overflow-hidden h-13 w-full"
             />
 
             <button
@@ -198,7 +235,7 @@ const Comments = ({
                         <>
                           <textarea
                             ref={editRef}
-                            className="border border-gray-300 rounded-2xl p-4 text-sm leading-tight outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition resize-none overflow-hidden w-full min-h-13"
+                            className="border border-gray-300 rounded-2xl p-4 text-sm leading-tight outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition resize-none overflow-hidden w-full h-13"
                             value={editedText}
                             onChange={(e) => {
                               setEditedText(e.target.value);
@@ -210,13 +247,17 @@ const Comments = ({
                             <button
                               className="bg-black text-white rounded-xl px-4 py-2 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-xs"
                               onClick={handleEdit}
+                              disabled={editLoading}
                             >
-                              Save
+                              {editLoading ? "Saving..." : "Save"}
                             </button>
 
                             <button
                               className="border border-gray-300 rounded-xl px-3 py-1 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer text-xs"
-                              onClick={() => setEditCommentId("")}
+                              onClick={() => {
+                                setEditCommentId("");
+                                setEditedText("");
+                              }}
                             >
                               Cancel
                             </button>
@@ -260,7 +301,7 @@ const Comments = ({
                 autoResize(e.target);
               }}
               placeholder="Write a comment..."
-              className="flex-1 border border-gray-300 rounded-2xl p-4 text-sm leading-tight outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition resize-none overflow-hidden min-h-13"
+              className="flex-1 border border-gray-300 rounded-2xl p-4 text-sm leading-tight outline-none focus:ring-2 focus:ring-black/20 focus:border-black transition resize-none overflow-hidden h-13"
             />
 
             <button
