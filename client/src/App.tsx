@@ -31,11 +31,52 @@ function App() {
     <>
       <Toaster
         position="top-center"
+        containerStyle={{ top: 30 }}
         toastOptions={{
+          duration: 3000,
           style: {
-            borderRadius: "14px",
-            padding: "14px",
-            fontSize: "14px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "2px",
+
+            padding: "10px 16px",
+            borderRadius: "12px",
+
+            fontSize: "13px",
+            fontWeight: "500",
+
+            background: "#ffffff",
+            color: "#111827",
+
+            border: "1px solid #e5e7eb",
+
+            boxShadow:
+              "0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.05)",
+
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+
+            zIndex: 9999,
+          },
+
+          success: {
+            iconTheme: {
+              primary: "#16a34a",
+              secondary: "#dcfce7",
+            },
+            style: {
+              borderLeft: "4px solid #16a34a",
+            },
+          },
+
+          error: {
+            iconTheme: {
+              primary: "#dc2626",
+              secondary: "#fee2e2",
+            },
+            style: {
+              borderLeft: "4px solid #dc2626",
+            },
           },
         }}
       />
