@@ -30,7 +30,7 @@ import { isAxiosError } from "axios";
 const Post = () => {
   const { id } = useParams();
 
-  if(!id) return;
+  if (!id) return;
 
   const { user, isLoggedIn } = useAuth();
 
@@ -150,7 +150,14 @@ const Post = () => {
 
   return (
     <>
-      {showConfirm && <ConfirmDelete onCancel={() => setShowConfirm(false)} handleDelete={handleDelete} loading={loading} field="Post" />}
+      {showConfirm && (
+        <ConfirmDelete
+          onCancel={() => setShowConfirm(false)}
+          handleDelete={handleDelete}
+          loading={loading}
+          field="Post"
+        />
+      )}
       {showEdit && (
         <EditPost
           image={post.imageSrc || ""}
@@ -288,6 +295,13 @@ const Post = () => {
                   setPost((prev) =>
                     prev
                       ? { ...prev, commentsCount: prev.commentsCount + 1 }
+                      : prev,
+                  )
+                }
+                onCommentDeleted={() =>
+                  setPost((prev) =>
+                    prev
+                      ? { ...prev, commentsCount: prev.commentsCount -1 }
                       : prev,
                   )
                 }
