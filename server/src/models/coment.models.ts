@@ -27,6 +27,12 @@ interface ICommentModel extends Model<IComment> {
     comment: string,
   ): Promise<PopulatedComment[]>;
 
+  editPostComment(
+    user: string,
+    comment: string,
+    text: string,
+  ): Promise<IComment>;
+
   deletePostComment(user: string, comment: string): Promise<IComment>;
 }
 
@@ -97,6 +103,38 @@ const CommentSchema = new Schema<IComment, ICommentModel>(
         await posts.save();
 
         return comments;
+      },
+
+      async editPostComment(user: string, comment: string, text: string) {
+        if (!isValidObjectId(user) || !isValidObjectId(comment)) {
+          throw new AppError("Invalid ID!", 400);
+        }
+
+        if (!text.trim()) {
+          throw new AppError("Comment cannot be empty", 400);
+        }
+
+        const updatedComment = await this.findOneAndUpdate(
+          {
+            _id: comment,
+            user,
+          },
+          {
+            text: text.trim(),
+          },
+          {
+            new: true,
+          },
+        );
+
+        if (!updatedComment) {
+          throw new AppError(
+            "Comment not found or you don't have permission",
+            404,
+          );
+        }
+
+        return updatedComment;
       },
 
       async deletePostComment(user: string, comment: string) {

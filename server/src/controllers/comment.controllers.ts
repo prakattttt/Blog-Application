@@ -38,6 +38,27 @@ export const writeComment: RequestHandler = expressAsyncHandler(
   },
 );
 
+export const editComment: RequestHandler = expressAsyncHandler(
+  async (req: AuthRequest, res) => {
+    const user = req.user?.id as string;
+    const comment = req.params["id"] as string;
+    
+    const { text } = req.body;
+
+    if (!text?.trim()) {
+      throw new AppError("Comment is required", 400);
+    }
+
+    const comments = await Comment.editPostComment(user, comment, text);
+
+    res.status(200).json({
+      success: true,
+      comments,
+      message: "Comment updated successfully!",
+    });
+  },
+);
+
 export const deleteComment: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
     const user = req.user?.id as string;
@@ -49,7 +70,7 @@ export const deleteComment: RequestHandler = expressAsyncHandler(
     res.status(200).json({
       success: true,
       comments,
-      message: "Comment deleted successfully!"
+      message: "Comment deleted successfully!",
     });
   },
 );
