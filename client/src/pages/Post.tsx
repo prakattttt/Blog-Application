@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
 import {
   FaHeart,
   FaRegHeart,
@@ -24,9 +24,14 @@ import toast from "react-hot-toast";
 import Options from "../components/Options";
 import ConfirmDelete from "../components/ConfirmDelete";
 import EditPost from "../components/EditPost";
+import { deletePost } from "../api/post.api";
+import { isAxiosError } from "axios";
 
 const Post = () => {
   const { id } = useParams();
+
+  if(!id) return;
+
   const { user, isLoggedIn } = useAuth();
 
   const [post, setPost] = useState<PostCard | null>(null);
@@ -40,6 +45,8 @@ const Post = () => {
   const [showEdit, setShowEdit] = useState(false);
 
   const myPost = user?._id.toString() === post?.author._id.toString();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function run() {
@@ -118,9 +125,32 @@ const Post = () => {
     }
   };
 
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      await deletePost(id);
+      toast.success("Post deleted successfully.");
+      navigate("/");
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+        return;
+      }
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+      setShowConfirm(false);
+    }
+  };
+
   return (
     <>
-      {showConfirm && <ConfirmDelete setShowConfirm={setShowConfirm} />}
+      {showConfirm && <ConfirmDelete onCancel={() => setShowConfirm(false)} handleDelete={handleDelete} loading={loading} field="Post" />}
       {showEdit && (
         <EditPost
           image={post.imageSrc || ""}
