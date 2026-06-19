@@ -2,6 +2,7 @@ export interface commentInterface {
   showComments: boolean;
   postID: string;
   onCommentAdded: () => void
+  onCommentDeleted: () => void
 }
 
 export interface CommentItem {

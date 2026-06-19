@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { addPostComments, getPostComments } from "../api/comment.api";
+import {
+  addPostComments,
+  getPostComments,
+  deletePostComments,
+} from "../api/comment.api";
 import { FaRegCommentDots } from "react-icons/fa";
 import Loader from "./Loader";
 import toast from "react-hot-toast";
@@ -7,11 +11,13 @@ import toast from "react-hot-toast";
 import type { CommentItem, commentInterface } from "../types/comment.types";
 import useAuth from "../hooks/useAuth";
 import ConfirmDelete from "./ConfirmDelete";
+import { isAxiosError } from "axios";
 
 const Comments = ({
   showComments,
   postID,
   onCommentAdded,
+  onCommentDeleted
 }: commentInterface) => {
   const { isLoggedIn, user } = useAuth();
 
@@ -86,8 +92,28 @@ const Comments = ({
     console.log("Edit");
   };
 
-  const handleDelete = () => {
-    console.log("Delete");
+  const handleDelete = async () => {
+    try {
+      const data = await deletePostComments(deleteCommentId);
+      const newCommentList = comments.filter(
+        (comment) => comment._id !== data.comments._id.toString(),
+      );
+      setComments(newCommentList);
+      onCommentDeleted();
+      setDeleteCommentId("");
+      toast.success(data.message);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+        return;
+      }
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
   };
 
   const handleDeleteComment = (id: string) => {
