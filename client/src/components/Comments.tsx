@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 import type { CommentItem, commentInterface } from "../types/comment.types";
 import useAuth from "../hooks/useAuth";
+import ConfirmDelete from "./ConfirmDelete";
 
 const Comments = ({
   showComments,
@@ -19,6 +20,7 @@ const Comments = ({
   const [loading, setLoading] = useState(true);
   const [editedText, setEditedText] = useState("");
   const [editCommentId, setEditCommentId] = useState("");
+  const [deleteCommentId, setDeleteCommentId] = useState("");
 
   const commentRef = useRef<HTMLTextAreaElement | null>(null);
   const editRef = useRef<HTMLTextAreaElement | null>(null);
@@ -84,8 +86,12 @@ const Comments = ({
     console.log("Edit");
   };
 
-  const handleDeleteComment = () => {
+  const handleDelete = () => {
     console.log("Delete");
+  };
+
+  const handleDeleteComment = (id: string) => {
+    setDeleteCommentId(id);
   };
 
   if (loading) {
@@ -136,6 +142,14 @@ const Comments = ({
 
   return (
     <>
+      {deleteCommentId && (
+        <ConfirmDelete
+          onCancel={() => setDeleteCommentId("")}
+          handleDelete={handleDelete}
+          loading={false}
+          field="Comment"
+        />
+      )}
       {showComments && (
         <div className="pt-6 pb-8 border-t border-gray-200 animate-[fadeIn_0.2s_ease]">
           <div className="flex flex-col gap-5">
@@ -200,7 +214,7 @@ const Comments = ({
 
                         <span
                           className="mini-click text-red-500 hover:text-red-600"
-                          onClick={handleDeleteComment}
+                          onClick={() => handleDeleteComment(item._id)}
                         >
                           Delete
                         </span>
