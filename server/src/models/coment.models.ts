@@ -27,7 +27,7 @@ interface ICommentModel extends Model<IComment> {
     comment: string,
   ): Promise<PopulatedComment[]>;
 
-  deletePostComment(user: string, comment: string): Promise<void>;
+  deletePostComment(user: string, comment: string): Promise<IComment>;
 }
 
 const CommentSchema = new Schema<IComment, ICommentModel>(
@@ -89,8 +89,8 @@ const CommentSchema = new Schema<IComment, ICommentModel>(
         );
 
         const posts = await Post.findById(postID);
-        
-        if(!posts) throw new AppError("Unable to fetch posts!", 400);
+
+        if (!posts) throw new AppError("Unable to fetch posts!", 400);
 
         posts.commentsCount++;
 
@@ -115,6 +115,12 @@ const CommentSchema = new Schema<IComment, ICommentModel>(
             404,
           );
         }
+
+        await Post.findByIdAndUpdate(deletedComment.post, {
+          $inc: { commentsCount: -1 },
+        });
+
+        return deletedComment;
       },
     },
   },
