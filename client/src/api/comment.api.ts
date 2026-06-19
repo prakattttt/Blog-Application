@@ -17,9 +17,9 @@ export const addPostComments = async (postId: string, comment: string) => {
 };
 
 export const deletePostComments = async (commentId: string) => {
-  const response = await api.delete(`/comments/write/${commentId}`);
+  const response = await api.delete(`/comments/delete/${commentId}`);
 
   if (response.data.success) {
-    return response.data.message;
+    return response.data;
   }
 };

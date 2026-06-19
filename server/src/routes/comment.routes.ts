@@ -10,6 +10,6 @@ router.get("/:id", getPostComments);
 
 router.post("/write/:id", authenticateUser, writeComment);
 
-router.post("/delete/:id", authenticateUser, deleteComment);
+router.delete("/delete/:id", authenticateUser, deleteComment);
 
 export default router;
