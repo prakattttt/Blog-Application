@@ -5,6 +5,7 @@ import AppError from "../utils/AppError.js";
 import fs from "fs/promises";
 import cloudinary from "../utils/Cloudinary.js";
 import type { AuthRequest } from "../middlewares/authenticaton.js";
+import { User } from "../models/user.models.js";
 
 export const getAllPosts: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
@@ -75,18 +76,26 @@ export const getSinglePost: RequestHandler = expressAsyncHandler(
 
 export const getSpecificPosts: RequestHandler = expressAsyncHandler(
   async (req: AuthRequest, res) => {
-    const id: string = req.params["id"] as string;
-
-    const skip: number = Number(req.query["skip"]) || 0;
+    const id = req.params["id"] as string;
+    const skip = Number(req.query["skip"]) || 0;
 
     const posts = await Post.getPostsByAuthor(id, skip);
 
-    const postNumber = await Post.countDocuments({ author: id });
+    const userInfo = await User.findById(id, {
+      name: 1,
+      bio: 1,
+      profileImage: 1,
+      createdAt: 1,
+    });
+
+    const totalPosts = await Post.countDocuments({ author: id });
 
     res.status(200).json({
       success: true,
       posts,
-      totalPages: Math.ceil(postNumber / 12),
+      userInfo,
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / 12),
     });
   },
 );
