@@ -19,6 +19,7 @@ import ChangeBio from "./pages/ChangeBio";
 import ChangeProfileImage from "./pages/ChangeProfile";
 import DeleteAccount from "./pages/DeleteAccount";
 import ScrollToTop from "./components/scrollToTop";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { loading } = useAuth();
@@ -91,6 +92,7 @@ function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/myposts" element={<MyPosts />} />
             <Route path="/post/:id" element={<Post />} />
+            <Route path="/profile/:id" element={<UserProfile />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
