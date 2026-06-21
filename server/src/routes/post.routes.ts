@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllPosts, getPosts, getSinglePost, createPost, deletePost, toggleLike, getTrendingPosts, editPost } from "../controllers/post.controllers.js";
+import { getAllPosts, getPosts, getSinglePost, createPost, deletePost, toggleLike, getTrendingPosts, editPost, getSpecificPosts } from "../controllers/post.controllers.js";
 
 import type { Router } from "express";
 import upload from "../middlewares/multer.js";
@@ -15,6 +15,8 @@ router.get("/trending", optionalAuth, getTrendingPosts);
 router.get("/me", authenticateUser, getPosts);
 
 router.get("/:id", getSinglePost);
+
+router.get("/user/:id", getSpecificPosts);
 
 router.post("/:id", upload.single("image"), createPost);
 
