@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { GetUserPostData } from "../types/users.types";
 import { getSpecificPosts } from "../api/post.api";
+import { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -34,7 +36,17 @@ const UserProfile = () => {
         const response = await getSpecificPosts(id, page - 1);
         setData(response);
       } catch (error) {
-        console.error(error);
+        if(isAxiosError(error)) {
+          toast.error(error.response?.data.message)
+          return;
+        }
+
+        if(error instanceof Error) {
+          toast.error(error.message);
+          return;
+        }
+
+        toast.error("Something went wrong.");
       }
     };
 
