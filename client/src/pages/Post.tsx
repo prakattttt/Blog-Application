@@ -174,7 +174,7 @@ const Post = () => {
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
             <div className="relative flex items-center justify-between">
-              <div className="flex items-center gap-4 px-6 py-3">
+              <div className="flex items-center gap-4 px-6 py-3 cursor-pointer" onClick={() => navigate(`/profile/${post.author._id}`)}>
                 <img
                   src={post.author.profileImage || profile}
                   alt="profile"
