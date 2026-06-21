@@ -32,6 +32,14 @@ export const getSinglePost = async (id: string) => {
   }
 };
 
+export const getSpecificPosts = async (id: string, page: number = 0) => {
+  const response = await api.get(`/posts/user/${id}?skip=${page}`);
+
+  if (response.data.success) {
+    return response.data;
+  }
+};
+
 export const createPost = async (body: FormData, id: string) => {
   const response = await api.post(`/posts/${id}`, body);
 
