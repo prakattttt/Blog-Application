@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { GetUserPostData } from "../types/users.types";
 import { getSpecificPosts } from "../api/post.api";
 import { isAxiosError } from "axios";
+import Pagination from "@mui/material/Pagination";
 import toast from "react-hot-toast";
 
 const UserProfile = () => {
@@ -36,12 +37,12 @@ const UserProfile = () => {
         const response = await getSpecificPosts(id, page - 1);
         setData(response);
       } catch (error) {
-        if(isAxiosError(error)) {
-          toast.error(error.response?.data.message)
+        if (isAxiosError(error)) {
+          toast.error(error.response?.data.message);
           return;
         }
 
-        if(error instanceof Error) {
+        if (error instanceof Error) {
           toast.error(error.message);
           return;
         }
@@ -155,29 +156,27 @@ const UserProfile = () => {
           )}
         </div>
 
-        {data.totalPages > 1 && (
-          <div className="flex justify-center gap-3 mt-10">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((prev) => prev - 1)}
-              className="px-4 py-2 rounded-lg border disabled:opacity-50"
-            >
-              Previous
-            </button>
-
-            <span className="px-4 py-2 font-semibold">
-              {page} / {data.totalPages}
-            </span>
-
-            <button
-              disabled={page === data.totalPages}
-              onClick={() => setPage((prev) => prev + 1)}
-              className="px-4 py-2 rounded-lg border disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        )}
+        <div className="flex justify-center mt-16">
+          <Pagination
+            count={data.totalPages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            variant="outlined"
+            shape="rounded"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                borderRadius: "12px",
+                color: "#111827",
+                borderColor: "#e5e7eb",
+                fontWeight: 600,
+              },
+              "& .Mui-selected": {
+                backgroundColor: "#000 !important",
+                color: "#fff !important",
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );
