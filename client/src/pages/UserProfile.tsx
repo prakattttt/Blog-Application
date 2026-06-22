@@ -6,6 +6,8 @@ import { getSpecificPosts } from "../api/post.api";
 import { isAxiosError } from "axios";
 import Pagination from "@mui/material/Pagination";
 import toast from "react-hot-toast";
+import profile from "../assets/profile.png";
+import ReactMarkdown from "react-markdown";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -64,7 +66,7 @@ const UserProfile = () => {
         <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-10 transition-all duration-300 hover:shadow-2xl">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             <img
-              src={data.userInfo.profileImage}
+              src={data.userInfo.profileImage || profile}
               alt={data.userInfo.name}
               className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gray-200 transition-transform duration-300 hover:scale-105"
             />
@@ -140,7 +142,7 @@ const UserProfile = () => {
                     </h3>
 
                     <p className="text-sm text-gray-500 mt-3 line-clamp-3">
-                      {post.description}
+                      <ReactMarkdown>{post.description}</ReactMarkdown>
                     </p>
 
                     <button
