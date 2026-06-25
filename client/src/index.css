@@ -1,8 +1,214 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------
+   Keyframes
+--------------------------------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.45);
+  }
+  60% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-16px) translateX(8px);
+  }
+}
+
+@keyframes floatSlowReverse {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(14px) translateX(-10px);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-120%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-15deg);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------
+   Base feel
+--------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: #000;
+  color: #fff;
+}
+
+/* slim, modern scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 999px;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer utilities {
   .popup {
     @apply transition-all duration-150 ease-linear hover:scale-105;
+  }
+
+  /* Entrance animations -------------------------------------------- */
+  .animate-fade-in {
+    animation: fadeIn 0.35s ease both;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-pop {
+    animation: popIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-float {
+    animation: floatSlow 7s ease-in-out infinite;
+  }
+
+  .animate-float-reverse {
+    animation: floatSlowReverse 8s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spinSlow 12s linear infinite;
+  }
+
+  /* Modal choreography ----------------------------------------------- */
+  .modal-overlay {
+    animation: fadeIn 0.2s ease both;
+  }
+
+  .modal-panel {
+    animation: scaleIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Skeleton shimmer --------------------------------------------------- */
+  .skeleton {
+    background: linear-gradient(90deg, #eceff1 0%, #f6f7f8 40%, #eceff1 80%);
+    background-size: 800px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* Hover utilities ----------------------------------------------------- */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+
+  .underline-grow {
+    position: relative;
+  }
+  .underline-grow::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 2px;
+    width: 0%;
+    background: currentColor;
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .underline-grow:hover::after {
+    width: 100%;
   }
 
   .hover-info {
@@ -14,11 +220,11 @@
   }
 
   .btn-1 {
-    @apply bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
+    @apply bg-black text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] cursor-pointer;
   }
 
   .btn-2 {
-    @apply border border-gray-300 rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200 active:scale-[0.98] cursor-pointer;
+    @apply transition-all duration-300 border border-gray-300 rounded-xl px-6 py-3 font-semibold hover:scale-[1.02] hover:-translate-y-0.5 hover:bg-gray-200 active:scale-[0.98] cursor-pointer;
   }
 
   .input {
