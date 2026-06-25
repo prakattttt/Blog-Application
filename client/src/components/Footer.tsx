@@ -41,7 +41,9 @@ const links = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-gray-200 bg-white/70 backdrop-blur-md">
+    <footer className="relative border-t border-gray-200 bg-white/70 backdrop-blur-md overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-black/20 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-6 md:px-10 pt-10 pb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
@@ -63,7 +65,10 @@ const Footer = () => {
             <ul className="mt-5 flex flex-col gap-3 text-sm text-gray-500">
               {menus.map((menu) => (
                 <li key={menu.menu}>
-                  <Link to={menu.dest} className="hover:text-black transition">
+                  <Link
+                    to={menu.dest}
+                    className="underline-grow inline-block hover:text-black transition-colors duration-300"
+                  >
                     {menu.menu}
                   </Link>
                 </li>
@@ -79,9 +84,9 @@ const Footer = () => {
             <div className="mt-5 flex items-center gap-4">
               {links.map((link, idx) => (
                 <Link
-                key={idx}
+                  key={idx}
                   to={link.to}
-                  className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
+                  className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-black hover:text-white hover:-translate-y-1 hover:rotate-6 hover:shadow-lg active:scale-90 transition-all duration-300 flex items-center justify-center"
                 >
                   <link.icon />
                 </Link>
@@ -96,15 +101,24 @@ const Footer = () => {
           </p>
 
           <div className="flex items-center gap-5 text-sm text-gray-500">
-            <Link to="/" className="hover:text-black transition">
+            <Link
+              to="/"
+              className="underline-grow hover:text-black transition-colors duration-300"
+            >
               Privacy
             </Link>
 
-            <Link to="/" className="hover:text-black transition">
+            <Link
+              to="/"
+              className="underline-grow hover:text-black transition-colors duration-300"
+            >
               Terms
             </Link>
 
-            <Link to="/" className="hover:text-black transition">
+            <Link
+              to="/"
+              className="underline-grow hover:text-black transition-colors duration-300"
+            >
               Contact
             </Link>
           </div>

@@ -129,11 +129,12 @@ const Comments = ({
       )}
 
       {showComments && (
-        <div className="pt-6 pb-8 border-t border-gray-200">
-          <div className="flex flex-col gap-5">
-            {comments.map((item) => (
+        <div className="pt-6 pb-8 border-t border-gray-200 animate-fade-in">
+          <div className="flex flex-col gap-5 animate-fade-in-up">
+            {comments.map((item, index) => (
               <CommentCard
                 key={item._id}
+                animationDelay={index * 60}
                 item={item}
                 userId={user?._id}
                 editCommentId={editCommentId}

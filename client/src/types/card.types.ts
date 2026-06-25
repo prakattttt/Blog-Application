@@ -18,4 +18,6 @@ export interface CardType {
   profileImg?: string;
 
   isBookmarked?: boolean;
+
+  animationDelay?: number;
 }

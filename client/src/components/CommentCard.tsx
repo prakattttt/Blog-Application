@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import type { CommentItem } from "../types/comment.types";
+import profile from "../assets/profile.png"
 
 type Props = {
   item: CommentItem;
@@ -12,6 +13,7 @@ type Props = {
   handleEdit: () => void;
   handleDeleteComment: (id: string) => void;
   editLoading: boolean;
+  animationDelay?: number;
 };
 
 const CommentCard = ({
@@ -25,6 +27,7 @@ const CommentCard = ({
   handleEdit,
   handleDeleteComment,
   editLoading,
+  animationDelay = 0,
 }: Props) => {
   const editRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -34,15 +37,18 @@ const CommentCard = ({
   };
 
   return (
-    <div className="flex gap-4">
+    <div
+      style={{ animationDelay: `${animationDelay}ms` }}
+      className="flex gap-4 animate-fade-in-up"
+    >
       <img
-        src={item.user.profileImage}
+        src={item.user.profileImage || profile}
         alt="comment-profile"
-        className="w-11 h-11 rounded-full object-cover"
+        className="w-11 h-11 rounded-full object-cover transition-transform duration-300 hover:scale-105"
       />
 
       <div className="container">
-        <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1">
+        <div className="bg-gray-100 rounded-2xl px-4 py-3 flex-1 transition-all duration-300 hover:bg-gray-50 hover:shadow-sm">
           <h3 className="font-bold text-sm text-black">{item.user.name}</h3>
 
           <div className="text-sm text-gray-600 mt-1 leading-relaxed">
@@ -50,7 +56,7 @@ const CommentCard = ({
               <>
                 <textarea
                   ref={editRef}
-                  className="border border-gray-300 rounded-2xl p-4 text-sm outline-none resize-none overflow-hidden w-full min-h-13"
+                  className="animate-scale-in border border-gray-300 rounded-2xl p-4 text-sm outline-none resize-none overflow-hidden w-full min-h-13"
                   value={editedText}
                   onChange={(e) => {
                     setEditedText(e.target.value);
@@ -84,16 +90,16 @@ const CommentCard = ({
         </div>
 
         {item.user._id === userId && editCommentId !== item._id && (
-          <div className="flex gap-3 ml-4 mt-1">
+          <div className="flex gap-3 ml-4 mt-2 animate-fade-in">
             <span
-              className="mini-click text-blue-500"
+              className="mini-click text-blue-500 hover:scale-105 transition-all duration-200"
               onClick={() => handleEditComment(item._id, item.text)}
             >
               Edit
             </span>
 
             <span
-              className="mini-click text-red-500"
+              className="mini-click text-red-500 hover:scale-105 transition-all duration-200"
               onClick={() => handleDeleteComment(item._id)}
             >
               Delete

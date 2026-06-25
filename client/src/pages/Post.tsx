@@ -40,6 +40,8 @@ const Post = () => {
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [likePop, setLikePop] = useState(false);
+  const [bookmarkPop, setBookmarkPop] = useState(false);
   const [options, setOptions] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -92,6 +94,8 @@ const Post = () => {
       const liked = (await toggleLike(id)) as boolean;
 
       setIsLiked(liked);
+      setLikePop(true);
+      setTimeout(() => setLikePop(false), 400);
 
       setPost((prev) => {
         if (!prev) return prev;
@@ -103,8 +107,17 @@ const Post = () => {
             : prev.likes.filter((likeId) => likeId !== user!._id),
         };
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+            if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+        return;
+      }
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -120,6 +133,8 @@ const Post = () => {
       const bookmarked = (await toggleBookmark(id)) as boolean;
 
       setIsBookmarked(bookmarked);
+      setBookmarkPop(true);
+      setTimeout(() => setBookmarkPop(false), 400);
     } catch (error) {
       console.error(error);
     }
@@ -174,15 +189,20 @@ const Post = () => {
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
             <div className="relative flex items-center justify-between">
-              <div className="flex items-center gap-4 px-6 py-3 cursor-pointer" onClick={() => navigate(`/profile/${post.author._id}`)}>
+              <div
+                className="flex items-center gap-4 px-6 py-3 cursor-pointer group"
+                onClick={() => navigate(`/profile/${post.author._id}`)}
+              >
                 <img
                   src={post.author.profileImage || profile}
                   alt="profile"
-                  className="w-12 h-12 rounded-full object-cover border border-gray-200"
+                  className="w-12 h-12 rounded-full object-cover border border-gray-200 transition-transform duration-300 group-hover:scale-105"
                 />
 
-                <div>
-                  <h2 className="font-bold text-black">{post.author.name}</h2>
+                <div className="animate-fade-in-up">
+                  <h2 className="font-bold text-black transition-colors group-hover:text-gray-600">
+                    {post.author.name}
+                  </h2>
 
                   <p className="text-xs text-gray-500">
                     {new Date(post.createdAt).toLocaleDateString()}
@@ -192,7 +212,7 @@ const Post = () => {
               {myPost && (
                 <PiDotsThreeOutlineFill
                   size={24}
-                  className="mx-5 cursor-pointer"
+                  className="mx-5 cursor-pointer p-2 box-content rounded-full hover:bg-gray-100 hover:scale-110 active:scale-95 transition-all duration-200"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleOptions();
@@ -250,23 +270,27 @@ const Post = () => {
                 <div className="flex items-center gap-6">
                   <button
                     onClick={handleLike}
-                    className={`flex items-center gap-2 transition ${
+                    className={`flex items-center gap-2 transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${
                       isLiked
                         ? "text-red-500"
                         : "text-gray-700 hover:text-red-500"
                     }`}
                   >
                     {isLiked ? (
-                      <FaHeart className="text-2xl" />
+                      <FaHeart
+                        className={`text-2xl ${likePop ? "animate-pop" : ""}`}
+                      />
                     ) : (
-                      <FaRegHeart className="text-2xl" />
+                      <FaRegHeart
+                        className={`text-2xl ${likePop ? "animate-pop" : ""}`}
+                      />
                     )}
                     <span>{post.likes.length}</span>
                   </button>
 
                   <button
-                    onClick={() => setShowComments(true)}
-                    className="flex items-center gap-2 text-gray-700 hover:text-black transition"
+                    onClick={() => setShowComments((prev) => !prev)}
+                    className="flex items-center gap-2 text-gray-700 hover:text-black hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
                   >
                     <FaRegComment className="text-2xl" />
                     <span>{post.commentsCount}</span>
@@ -275,16 +299,20 @@ const Post = () => {
 
                 <button
                   onClick={handleBookmark}
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center gap-2 transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${
                     isBookmarked
                       ? "text-black"
                       : "text-gray-700 hover:text-black"
                   }`}
                 >
                   {isBookmarked ? (
-                    <FaBookmark className="text-2xl" />
+                    <FaBookmark
+                      className={`text-2xl ${bookmarkPop ? "animate-pop" : ""}`}
+                    />
                   ) : (
-                    <FaRegBookmark className="text-2xl" />
+                    <FaRegBookmark
+                      className={`text-2xl ${bookmarkPop ? "animate-pop" : ""}`}
+                    />
                   )}
                 </button>
               </div>
@@ -301,7 +329,7 @@ const Post = () => {
                 onCommentDeleted={() =>
                   setPost((prev) =>
                     prev
-                      ? { ...prev, commentsCount: prev.commentsCount -1 }
+                      ? { ...prev, commentsCount: prev.commentsCount - 1 }
                       : prev,
                   )
                 }
@@ -312,7 +340,7 @@ const Post = () => {
           <div className="mt-10 flex justify-center">
             <Link
               to="/"
-              className="text-gray-600 hover:text-black transition flex items-center gap-1"
+              className="underline-grow text-gray-600 hover:text-black transition-colors duration-300 flex items-center gap-1"
             >
               <FiArrowLeft size={20} />
               Back to home

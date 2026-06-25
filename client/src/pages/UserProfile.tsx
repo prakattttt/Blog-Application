@@ -63,7 +63,7 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-gray-100 px-4 sm:px-6 py-10">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-10 transition-all duration-300 hover:shadow-2xl">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-10 transition-all duration-300 hover:shadow-2xl animate-fade-in-up">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             <img
               src={data.userInfo.profileImage || profile}
@@ -81,7 +81,7 @@ const UserProfile = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-gray-200 transition hover:bg-gray-100">
+                <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-gray-200 transition-all duration-300 hover:bg-gray-100 hover:-translate-y-0.5">
                   <FaCalendarAlt className="text-gray-700" />
 
                   <div>
@@ -95,7 +95,7 @@ const UserProfile = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-gray-200 transition hover:bg-gray-100">
+                <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-gray-200 transition-all duration-300 hover:bg-gray-100 hover:-translate-y-0.5">
                   <FaPen className="text-gray-700" />
 
                   <div>
@@ -109,7 +109,7 @@ const UserProfile = () => {
         </div>
 
         <div className="mt-12">
-          <div className="mb-8">
+          <div className="mb-8 animate-fade-in-up">
             <h2 className="text-3xl font-bold tracking-tight">
               Posts by {data.userInfo.name}
             </h2>
@@ -120,24 +120,28 @@ const UserProfile = () => {
           </div>
 
           {data.posts.length === 0 ? (
-            <div className="bg-white rounded-3xl p-10 text-center border border-gray-200">
+            <div className="bg-white rounded-3xl p-10 text-center border border-gray-200 animate-fade-in-up">
               <p className="text-gray-500">No posts found.</p>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.posts.map((post) => (
+              {data.posts.map((post, idx) => (
                 <div
                   key={post._id}
-                  className="bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  onClick={() => navigate(`/post/${post._id}`)}
+                  style={{ animationDelay: `${Math.min(idx, 8) * 70}ms` }}
+                  className="group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer animate-fade-in-up"
                 >
-                  <img
-                    src={post.imageSrc}
-                    alt={post.title}
-                    className="w-full h-52 object-cover"
-                  />
+                  <div className="overflow-hidden">
+                    <img
+                      src={post.imageSrc}
+                      alt={post.title}
+                      className="w-full h-52 object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+                    />
+                  </div>
 
                   <div className="p-5">
-                    <h3 className="font-bold text-lg leading-tight">
+                    <h3 className="font-bold text-lg leading-tight transition-colors group-hover:text-black">
                       {post.title}
                     </h3>
 
@@ -146,8 +150,11 @@ const UserProfile = () => {
                     </p>
 
                     <button
-                      className="mt-5 text-sm font-semibold text-black hover:underline"
-                      onClick={() => navigate(`/post/${post._id}`)}
+                      className="underline-grow mt-5 text-sm font-semibold text-black cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/post/${post._id}`);
+                      }}
                     >
                       Read More
                     </button>
@@ -171,6 +178,12 @@ const UserProfile = () => {
                 color: "#111827",
                 borderColor: "#e5e7eb",
                 fontWeight: 600,
+                transition: "all 0.25s ease",
+              },
+              "& .MuiPaginationItem-root:hover": {
+                transform: "translateY(-2px)",
+                backgroundColor: "#f3f4f6",
+                borderColor: "#d1d5db",
               },
               "& .Mui-selected": {
                 backgroundColor: "#000 !important",

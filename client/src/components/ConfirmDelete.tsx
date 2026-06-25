@@ -9,26 +9,26 @@ type Props = {
 
 const ConfirmDelete = ({ onCancel, handleDelete, loading, field }: Props) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4 modal-overlay">
+      <div className="modal-panel w-full max-w-md bg-white rounded-2xl shadow-2xl p-6">
         <div className="flex justify-center">
-          <div className="p-4 rounded-full bg-red-100">
+          <div className="p-4 rounded-full bg-red-100 animate-pop">
             <FaTrashAlt className="text-red-600 text-2xl" />
           </div>
         </div>
 
-        <h2 className="text-xl font-bold text-center mt-4 text-gray-800">
+        <h2 className="text-xl font-bold text-center mt-4 text-gray-800 animate-fade-in-up">
           {`Confirm ${field} Deletion`}
         </h2>
 
-        <p className="text-gray-500 text-center mt-2">
+        <p className="text-gray-500 text-center mt-2 animate-fade-in">
           {`Are you sure you want to delete this ${field}?`}
         </p>
 
         <div className="flex gap-4 mt-6">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 border border-gray-300 rounded-xl hover:bg-gray-100"
+            className="flex-1 py-3 border border-gray-300 rounded-xl transition-all duration-300 hover:bg-gray-100 hover:scale-[1.02] active:scale-95"
           >
             Cancel
           </button>

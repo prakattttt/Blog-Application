@@ -48,7 +48,7 @@ const UserInfo = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 animate-fade-in-up">
         <h1 className="text-3xl font-extrabold text-black">
           Complete Your Profile
         </h1>
@@ -69,14 +69,14 @@ const UserInfo = () => {
             onChange={(e) => setBio(e.target.value)}
             placeholder="Tell us about yourself..."
             rows={5}
-            className="w-full mt-2 border border-gray-300 rounded-2xl px-4 py-3 outline-none resize-none focus:ring-2 focus:ring-black/20 focus:border-black transition"
+            className="w-full mt-2 border border-gray-300 rounded-2xl px-4 py-3 outline-none resize-none focus:ring-2 focus:ring-black/20 focus:border-black transition-all duration-300"
           />
         </div>
 
         <div className="mt-8 flex items-center gap-3">
           <button
             onClick={() => navigate("/login")}
-            className="flex-1 border border-gray-300 text-gray-700 rounded-2xl py-3 font-semibold hover:bg-gray-100 active:scale-95 transition"
+            className="flex-1 border border-gray-300 text-gray-700 rounded-2xl py-3 font-semibold hover:bg-gray-100 hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
           >
             Maybe Later
           </button>
@@ -84,7 +84,7 @@ const UserInfo = () => {
           <button
             onClick={handleSubmit}
             disabled={(!image && !bio.trim()) || isSubmitting}
-            className="flex-1 bg-black text-white rounded-2xl py-3 font-semibold hover:scale-[1.02] active:scale-95 transition disabled:opacity-80 disabled:cursor-not-allowed"
+            className="btn-shine flex-1 bg-black text-white rounded-2xl py-3 font-semibold hover:scale-[1.02] active:scale-95 transition-all duration-200 disabled:opacity-80 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? "Saving..." : "Continue"}
           </button>

@@ -54,7 +54,7 @@ const MainSection = ({ type, header, description }: Content) => {
 
   return (
     <section className="px-6 py-10 max-w-7xl mx-auto">
-      <div className="mb-10">
+      <div className="mb-10 animate-fade-in-up">
         <h1 className="text-4xl font-bold tracking-tight">{header}</h1>
 
         <p className="text-md text-gray-500 mt-3 whitespace-pre-wrap">
@@ -77,6 +77,12 @@ const MainSection = ({ type, header, description }: Content) => {
               color: "#111827",
               borderColor: "#e5e7eb",
               fontWeight: 600,
+              transition: "all 0.25s ease",
+            },
+            "& .MuiPaginationItem-root:hover": {
+              transform: "translateY(-2px)",
+              backgroundColor: "#f3f4f6",
+              borderColor: "#d1d5db",
             },
             "& .Mui-selected": {
               backgroundColor: "#000 !important",

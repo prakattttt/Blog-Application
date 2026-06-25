@@ -17,6 +17,7 @@ const Card = ({
   comments,
   isBookmarked,
   profileImg,
+  animationDelay = 0,
 }: CardType) => {
   const { isLoggedIn } = useAuth();
 
@@ -30,7 +31,7 @@ const Card = ({
     if (!isLoggedIn) {
       return;
     }
-    
+
     try {
       const bookmarked = (await toggleBookmark(id)) as boolean;
 
@@ -43,14 +44,15 @@ const Card = ({
   return (
     <div
       onClick={() => navigate(`/post/${id}`)}
-      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
+      style={{ animationDelay: `${animationDelay}ms` }}
+      className="group animate-fade-in-up hover-lift bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl cursor-pointer flex flex-col transition-all duration-500"
     >
       {imageSrc ? (
         <div className="overflow-hidden">
           <img
             src={imageSrc}
             alt={`blog-img-${id}`}
-            className="w-full h-56 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className="w-full h-56 object-cover group-hover:scale-[1.06] transition-transform duration-700"
           />
         </div>
       ) : (
@@ -70,7 +72,7 @@ const Card = ({
         <div className="flex items-center gap-3">
           <img
             src={profileImg}
-            className="w-10 h-10 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="leading-tight">
             <h3 className="text-sm font-semibold text-gray-900">{userName}</h3>
@@ -79,7 +81,7 @@ const Card = ({
         </div>
 
         <div className="flex-1">
-          <h2 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-black">
+          <h2 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 transition-all duration-300 group-hover:tracking-[0.2px]">
             {header}
           </h2>
 
@@ -92,7 +94,7 @@ const Card = ({
           <div className="flex items-center gap-5 text-gray-500 text-sm">
             <button
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 hover:text-red-500 transition"
+              className="flex items-center gap-1 hover:text-red-500 transition-all duration-300 hover:scale-110"
             >
               <FaHeart />
               <span>{likes}</span>
@@ -100,7 +102,7 @@ const Card = ({
 
             <button
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 hover:text-black transition"
+              className="flex items-center gap-1 transition-all duration-300 hover:scale-110 hover:text-black"
             >
               <FaRegCommentDots />
               <span>{comments}</span>
@@ -109,8 +111,8 @@ const Card = ({
 
           <button
             onClick={handleBookmark}
-            className={`transition ${
-              bookmarked ? "text-black" : "text-gray-400"
+            className={`transition-all duration-300 hover:scale-125 ${
+              bookmarked ? "text-black animate-pop" : "text-gray-400"
             }`}
           >
             <FaBookmark size={20} />
